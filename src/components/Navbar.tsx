@@ -1,17 +1,18 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
-
 import { Search, AccountCircle } from '@mui/icons-material';
 
 const NavWrapper = styled.nav`
-    width: 100vw;
-    height: 100px;
-    display: flex;
-    padding: 20px 36px;
-    box-shadow: 0px 2.98256px 7.4564px rgba(0, 0, 0, 0.1);
-    /* background: red; */
-    align-items: center;
-    `
+  width: 100vw;
+  height: 100px;
+  display: ${(props) => (props.isHidden ? 'none' : 'flex')};
+  padding: 20px 36px;
+  top: 0;
+  position: sticky;
+  /* box-shadow: 0px 2.98256px 7.4564px rgba(0, 0, 0, 0.1); */
+  background: red;
+  align-items: center;
+`;
 const LogoContainer = styled.button`
     margin-right: auto;
     background: none;
@@ -22,12 +23,43 @@ const LogoContainer = styled.button`
 `
 
 const Navbar = () => {
+  const [isHidden, setIsHidden] = useState(false)
+  const [prevScrollPosition, setPrevScrollPosition] = useState(window.scrollY);
+
+  useEffect(()=>{
+    let timeoutId;
+    const handleScrollEvent = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const currentScrollPosition = window.scrollY;
+        setIsHidden(()=> {
+          if (currentScrollPosition < prevScrollPosition) {
+            console.log('up')
+            return false;
+          } else {
+            console.log('down')
+            return true;
+          }
+        });
+        setPrevScrollPosition(currentScrollPosition)
+      }, 200);
+    };
+
+    window.addEventListener("scroll", handleScrollEvent);
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollEvent)
+    };
+  },[])
 
 
     const LogoButton = () => {
       
         const handleButtonClick = () => {
-          console.log("take me home")
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
         };
 
         return (
@@ -64,7 +96,7 @@ const Navbar = () => {
     };
     
     return (
-        <NavWrapper>
+        <NavWrapper isHidden={isHidden}>
             <LogoButton/> 
             <SearchButton/>
             <ProfileButton/>

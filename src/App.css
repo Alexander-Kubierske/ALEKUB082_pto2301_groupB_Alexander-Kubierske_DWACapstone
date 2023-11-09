@@ -23,3 +23,7 @@ body {
 .search--container {
   padding-right: 10px;
 }
+
+.nav--hidden {
+  display: none;
+}
