@@ -2,17 +2,24 @@ import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { Search, AccountCircle } from '@mui/icons-material';
 
+interface NavWrapper {
+  isHidden: boolean;
+}
+
 const NavWrapper = styled.nav`
+  z-index: 1;
   width: 100vw;
   height: 100px;
-  display: ${(props) => (props.isHidden ? 'none' : 'flex')};
+  display: flex;
   padding: 20px 36px;
-  top: 0;
+  top: ${(props) => (props.isHidden ? '0' :  '-100px')};
   position: sticky;
   /* box-shadow: 0px 2.98256px 7.4564px rgba(0, 0, 0, 0.1); */
   background: red;
   align-items: center;
+  transition: top 1s ease;
 `;
+
 const LogoContainer = styled.button`
     margin-right: auto;
     background: none;
@@ -22,35 +29,31 @@ const LogoContainer = styled.button`
     flex-shrink: 0;
 `
 
+let timeoutId: number | undefined;
+
 const Navbar = () => {
   const [isHidden, setIsHidden] = useState(false)
   const [prevScrollPosition, setPrevScrollPosition] = useState(window.scrollY);
 
-  useEffect(()=>{
-    let timeoutId;
-    const handleScrollEvent = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        const currentScrollPosition = window.scrollY;
-        setIsHidden(()=> {
-          if (currentScrollPosition < prevScrollPosition) {
-            console.log('up')
-            return false;
-          } else {
-            console.log('down')
-            return true;
-          }
-        });
-        setPrevScrollPosition(currentScrollPosition)
-      }, 200);
-    };
+  const handleScrollEvent = () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      const currentScrollPosition = window.scrollY;
+      setIsHidden((
+        (prevScrollPosition > currentScrollPosition && prevScrollPosition - currentScrollPosition > 70) ||
+        currentScrollPosition > 100
+      ));
+      setPrevScrollPosition(currentScrollPosition)
+    }, 50);
+  };
 
+  useEffect(()=>{
     window.addEventListener("scroll", handleScrollEvent);
 
     return () => {
       window.removeEventListener("scroll", handleScrollEvent)
     };
-  },[])
+  },[prevScrollPosition, isHidden, handleScrollEvent])
 
 
     const LogoButton = () => {

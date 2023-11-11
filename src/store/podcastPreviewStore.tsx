@@ -24,12 +24,11 @@ interface DataStoreState {
 export const usePodcastPreviewStore = create<DataStoreState>((set) => ({
     data: [],
     fetchData: async () => {
-      try {
-        const response = await fetchPodcastPreview();
-        set({ data: response });
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+        try {
+          const response = await fetchPodcastPreview();
+          set({ data: response });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
     },
   }));
-;
