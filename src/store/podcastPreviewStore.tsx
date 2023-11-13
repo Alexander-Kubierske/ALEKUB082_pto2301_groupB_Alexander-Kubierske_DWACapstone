@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import PodcastFetchRequests from '../services/podcastAPICalls.tsx'
 import { Podcast } from '../services/podcastInterfaces.ts';
 

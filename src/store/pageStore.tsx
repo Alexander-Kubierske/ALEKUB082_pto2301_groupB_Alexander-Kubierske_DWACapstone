@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 
 /**
  * Custom Zustand hook to manage conditional page rendering.

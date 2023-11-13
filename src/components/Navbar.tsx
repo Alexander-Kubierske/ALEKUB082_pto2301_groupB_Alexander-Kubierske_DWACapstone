@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { Search, AccountCircle } from '@mui/icons-material';
 
-interface NavWrapper {
+interface NavWrapperProps {
   isHidden: boolean;
 }
 
-const NavWrapper = styled.nav`
+const NavWrapper: React.FC<NavWrapperProps> = ({ isHidden, ...rest }) => {
+  return <StyledNavWrapper {...rest} />; // the problem here is the way styled components and ts interact in this corner case. We are passing a prop down to react which is not there when react renders the program or a prop that is native to react it therefore tells us that that prop doesn't have a value and cant modify something that doesn't have that value.
+};
+
+const StyledNavWrapper = styled.nav<NavWrapperProps>`
   z-index: 1;
   width: 100vw;
   height: 100px;
@@ -43,8 +47,9 @@ const Navbar = () => {
         (prevScrollPosition > currentScrollPosition && prevScrollPosition - currentScrollPosition > 70) ||
         currentScrollPosition > 100
       ));
+      console.log("current:", currentScrollPosition, "\n previous:", prevScrollPosition)
       setPrevScrollPosition(currentScrollPosition)
-    }, 50);
+    }, 100);
   };
 
   useEffect(()=>{
@@ -54,6 +59,10 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScrollEvent)
     };
   },[prevScrollPosition, isHidden, handleScrollEvent])
+
+  // useEffect(() => {
+  //   console.log(`Navbar should be ${isHidden ? 'hidden' : 'showing'}`);
+  // }, [isHidden]);
 
 
     const LogoButton = () => {
@@ -105,8 +114,6 @@ const Navbar = () => {
             <ProfileButton/>
         </NavWrapper>
     )
+};
 
-
-}
-
-export default Navbar
+export default Navbar;

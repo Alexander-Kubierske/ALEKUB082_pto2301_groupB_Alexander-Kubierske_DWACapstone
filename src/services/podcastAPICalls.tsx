@@ -1,5 +1,17 @@
 import { Podcast, PodcastShow } from "./podcastInterfaces";
 
+export const genres: Record<number, string> = {
+  1:"Personal Growth",
+  2:"True Crime and Investigative Journalism",
+  3:"History",
+  4:"Comedy",
+  5:"Entertainment",
+  6:"Business",
+  7:"Fiction",
+  8:"News",
+  9:"Kids and Family",
+}
+
 /**
  * Fetches a list of podcasts preview data and console logs the error then throws the error to be used
  * in the component that called the function.
@@ -10,7 +22,17 @@ const fetchPodcastPreview = async (): Promise<Podcast[]> => {
     try {
       const response = await fetch('https://podcast-api.netlify.app/shows');
       const data = await response.json();
-      return data; 
+      const transformedData: Podcast[] = data.map((podcast: any) => ({
+        ...podcast,
+        genres: podcast.genres.map((genreId: number) => genres[genreId]),
+        updated: new Date(podcast.updated).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }),
+      }));
+  
+      return transformedData;
     } catch (error) {
       console.error('Error fetching podcasts:', error);
       throw error; 
