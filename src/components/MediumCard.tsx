@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 import { Podcast } from "../services/podcastInterfaces";
+import { usePodcastInfoStore } from '../store/storeIndex';
 
 export default function MediumCard(cardProps: Podcast) {
-  const { description, genres, id, image, seasons, title, updated } = cardProps;
+  const { id, image, title } = cardProps;
+  const { toggleVisible, setId } = usePodcastInfoStore();
 
   const handleClick = () => {
-    console.log(title)
+    toggleVisible()
+    setId(id)
+    console.log(id)
   }
 
   return (
-    <Card sx={{ maxWidth: 140 }} className={id}>
+    <Card sx={{ minWidth: '8.75rem', maxWidth: '8.75rem' }} className={id}>
       <CardActionArea onClick={handleClick}>
         <CardMedia
           component="img"
@@ -24,27 +27,3 @@ export default function MediumCard(cardProps: Podcast) {
     </Card>
   );
 };
-
-
-
-    // actual
-    // <Card sx={{ maxWidth: 140 }} className={cardProps.id}>
-    //   <CardActionArea onClick={handleClick}>
-    //     <CardMedia
-    //       component="img"
-    //       height="140"
-    //       image={cardProps.image}
-    //       alt={`${cardProps.title} banner image`}
-    //     />
-    //     <CardContent>
-    //       <Typography gutterBottom variant="h5" component="div">
-    //         {cardProps.title}
-    //       </Typography>
-    //     </CardContent>
-    //   </CardActionArea>
-    //   <CardActions>
-    //     <Button size="small" color="primary">
-    //       add to watch later
-    //     </Button>
-    //   </CardActions>
-    // </Card>

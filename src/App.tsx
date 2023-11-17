@@ -18,6 +18,7 @@ function App() {
     <MediumCard key={podcast.id} {...podcast} />
   ));
 
+  console.log(data)
   return (
     <>
       <Navbar/>

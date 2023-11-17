@@ -4,7 +4,7 @@ export interface Podcast {
     description: string;
     seasons: number;
     image: string;
-    genreIds: number[];
+    genres: string[];
     updated: string;
   }
 

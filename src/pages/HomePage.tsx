@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { genres } from "../services/podcastAPICalls";
 import Carousel from "../components/Carousel";
+import PodcastDialog from "../components/PodcastDialog";
 
 const HomePage = () => {
     // handle filtering of map
@@ -21,6 +22,7 @@ const HomePage = () => {
     return (
         <div>
             {CarouselGenres}
+            <PodcastDialog/>
         </div>
     )
 };

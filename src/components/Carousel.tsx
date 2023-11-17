@@ -3,6 +3,11 @@ import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import styled from 'styled-components';
 import { usePodcastPreviewStore } from '../store/storeIndex';
 
+interface CarouselProps {
+  key: string;
+  genre: string;
+}
+
 const CarouselContainer = styled.div`
   background: #D3D3D3;
 `;
@@ -46,11 +51,10 @@ const Placeholder = styled.img`
   /* Add styling for the images inside the slider */
 `;
 
-const Carousel = (props) => {
+const Carousel = (props: CarouselProps) => {
     const {data} = usePodcastPreviewStore();
     const {genre} = props;
     const genreFilter = data.filter(podcast => podcast.genres.includes(genre))
-    console.log(genreFilter)
 
     const CardSelection = genreFilter.slice(0, 10).map(item => {
         return (
