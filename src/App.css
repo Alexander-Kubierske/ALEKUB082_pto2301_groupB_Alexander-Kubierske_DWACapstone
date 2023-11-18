@@ -11,6 +11,7 @@
 body {
   /* background: blue; */
   margin: 0;
+  overflow-y: scroll;
 }
 
 .logo--button {
@@ -26,4 +27,8 @@ body {
 
 .nav--hidden {
   display: none;
+}
+
+.MuiAccordionSummary-expandIconWrapper {
+  transform: rotate(0);
 }

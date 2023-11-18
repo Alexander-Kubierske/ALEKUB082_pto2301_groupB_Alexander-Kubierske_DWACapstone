@@ -6,17 +6,17 @@ import DialogContent from '@mui/material/DialogContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { usePodcastInfoStore, usePodcastPreviewStore } from '../store/storeIndex';
-import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import DialogTabs from './DialogTabs';
 import PodcastFetchRequests from '../services/podcastAPICalls';
 import { PodcastShow } from '../services/podcastInterfaces';
+import {Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const PodcastDialog = () => {
   const [podcastShow, setPodcastShow] = useState<PodcastShow | null>(null);
   const { visible, currentPodcastId, toggleVisible, setId } = usePodcastInfoStore();
   const { data } = usePodcastPreviewStore();
-  const [value, setValue] = React.useState<number | null>(0);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const currentPodcast = data.find(podcast => podcast.id === currentPodcastId);
@@ -64,7 +64,7 @@ const PodcastDialog = () => {
         open={visible}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
-        scroll='body'
+   
       >
         <div className='dialog__header' style={dialogHeaderStyles}>
           <img className='dialog__img' src={currentPodcast?.image} alt="Podcast Logo" style={imageStyles} onClick={handlePlay}></img>
@@ -72,19 +72,25 @@ const PodcastDialog = () => {
             <h1>{currentPodcast?.title}</h1>
             <h3>Seasons: {currentPodcast?.seasons}</h3>
             <h3>Last Update: {currentPodcast?.updated}</h3>
-            <Typography component="legend">Rating</Typography>
-            <Rating
-              name="simple-controlled"
-              value={value}
-              onChange={(event, newValue) => {
-                setValue(newValue);
-                // please add a hook to save the rating to user profile
-              }}
-            />
           </div>
         </div>
 
-        <DialogContent>
+        <DialogContent style={{ overflowY: 'scroll' }}>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="description"
+              id="description"
+            >
+              <Typography>Description</Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+              <Typography>
+                {podcastShow?.description}
+              </Typography>
+            </AccordionDetails>
+        </Accordion>
         {podcastShow ? (
             <DialogTabs podcastShow={podcastShow} />
           ) : (

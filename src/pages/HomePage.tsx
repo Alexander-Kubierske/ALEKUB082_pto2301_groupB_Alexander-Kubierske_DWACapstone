@@ -4,10 +4,6 @@ import Carousel from "../components/Carousel";
 import PodcastDialog from "../components/PodcastDialog";
 
 const HomePage = () => {
-    // handle filtering of map
-    // how many items
-    // creating carousel 
-    // rendering the items
     const genreArray = (Object.entries(genres) as [string, string][]).map(([genreId, genreName]) => ({
         genreId,
         genreName,

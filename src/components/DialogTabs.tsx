@@ -1,65 +1,98 @@
 import React from 'react';
-import { Tabs, Tab, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { PodcastShow, Season, Episode } from '../services/podcastInterfaces';
+import { Tabs, Tab, Box, Accordion, AccordionSummary, AccordionDetails, Typography, Button } from '@mui/material';
+import { Episode, PodcastShow, Season } from '../services/podcastInterfaces';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import { usePlayerStore } from '../store/playerStore';
+import styled from 'styled-components';
 
 interface DialogTabsProps {
   podcastShow: PodcastShow | null;
 }
 
-const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
-  const [descriptionTabValue, setDescriptionTabValue] = React.useState(0);
-  const [seasonsTabValue, setSeasonsTabValue] = React.useState(0);
+const ExpandIconWrapper = styled.div`
 
-  const handleDescriptionTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setDescriptionTabValue(newValue);
-  };
+    transform: rotate(0deg);
+
+    &.Mui-expanded {
+        transform: rotate(0deg);
+    }
+`;
+
+const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
+  const [seasonsTabValue, setSeasonsTabValue] = React.useState(1);
+  const { currentEpisode, isPlaying, currentTime, playEpisode, pauseEpisode, setCurrentTime } =
+  usePlayerStore();
 
   const handleSeasonsTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSeasonsTabValue(newValue);
   };
 
-  const renderSeasonAccordions = (season: Season) => {
-    return season.episodes.map((episode) => (
+  const handlePlay = (episode: Episode) => {
+   isPlaying ? pauseEpisode() : playEpisode(episode)
+  }
+
+  const renderEpisodeAccordions = (season: Season) => {
+    const reversedEpisodes = [...season.episodes].reverse();
+    return reversedEpisodes.map((episode) => (
       <Accordion key={episode.episode}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary expandIcon={<Button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePlay(episode);
+            }}
+          >
+            {currentEpisode === episode ? (isPlaying ? <PauseCircleIcon /> : <PlayCircleIcon />) : <PlayCircleIcon />}
+          </Button>}>
           <Typography>{`${episode.title}`}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            {`Episode ${episode.episode}: ${episode.title}\nDescription: ${episode.description}`}
+          {episode.description ? (
+            <>
+              {`Description: ${episode.description}`}
+            </>
+          ) : (
+            <br />
+          )}
+          {!episode.description && 'No description'}
           </Typography>
         </AccordionDetails>
       </Accordion>
     ));
   };
 
-  const renderEpisodeTabs = () => {
+  const renderSeasonTabs = () => {
     return podcastShow?.seasons.map((season) => (
-      <Tab key={season.season} label={`Season ${season.season}`}>
-        {renderSeasonAccordions(season)}
-      </Tab>
+      <Tab
+        key={season.season}
+        label={`Season ${season.season}`}
+        onClick={(event) => handleSeasonsTabChange(event, season.season)}
+        value={season.season}
+      />
+    ));
+  };
+
+  const renderTabPanels = () => {
+    return podcastShow?.seasons.map((season) => (
+      <Box
+        key={season.season}
+        role="tabpanel"
+        hidden={seasonsTabValue !== season.season}
+        id={`season-tabpanel-${season.season}`}
+        aria-labelledby={`season-tab-${season.season}`}
+      >
+        {seasonsTabValue === season.season && <div>{renderEpisodeAccordions(season)}</div>}
+      </Box>
     ));
   };
 
   return (
     <div>
-      <Tabs value={descriptionTabValue} onChange={handleDescriptionTabChange} aria-label="description-tabs">
-        <Tab label="Description" />
-        <Tab label="Episodes" />
+      <Tabs value={seasonsTabValue} onChange={handleSeasonsTabChange} aria-label="season-tabs">
+        {renderSeasonTabs()}
       </Tabs>
-      <div role="tabpanel" hidden={descriptionTabValue !== 0}>
-        {descriptionTabValue === 0 && <Typography>{podcastShow?.description}</Typography>}
-      </div>
-      <div role="tabpanel" hidden={descriptionTabValue !== 1}>
-        {descriptionTabValue === 1 && (
-          <div>
-            <Tabs value={seasonsTabValue} onChange={handleSeasonsTabChange} aria-label="season-tabs">
-              {renderEpisodeTabs()}
-            </Tabs>
-          </div>
-        )}
-      </div>
+      {renderTabPanels()}
     </div>
   );
 };
