@@ -4,7 +4,6 @@ import { Navbar, MediumCard, Carousel } from './components/componentIndex';
 import { HomePage } from './pages/pageIndex';
 import { usePodcastPreviewStore } from './store/storeIndex';
 
-
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
 
@@ -18,7 +17,6 @@ function App() {
     <MediumCard key={podcast.id} {...podcast} />
   ));
 
-  console.log(data)
   return (
     <>
       <Navbar/>

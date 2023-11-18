@@ -1,24 +1,38 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { usePodcastInfoStore, usePodcastPreviewStore } from '../store/storeIndex';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-
+import DialogTabs from './DialogTabs';
+import PodcastFetchRequests from '../services/podcastAPICalls';
+import { PodcastShow } from '../services/podcastInterfaces';
 
 const PodcastDialog = () => {
+  const [podcastShow, setPodcastShow] = useState<PodcastShow | null>(null);
   const { visible, currentPodcastId, toggleVisible, setId } = usePodcastInfoStore();
   const { data } = usePodcastPreviewStore();
   const [value, setValue] = React.useState<number | null>(0);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const currentPodcast = data.find(podcast => podcast.id === currentPodcastId);
-  console.log(currentPodcast)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await PodcastFetchRequests.fetchPodcastShow(currentPodcastId);
+        setPodcastShow(data);
+      } catch (error) {
+        console.error('Error fetching podcast data:', error);
+      }
+    };
+
+    fetchData();
+  }, [currentPodcastId]);
 
   const handleClose = () => {
     toggleVisible()
@@ -71,17 +85,16 @@ const PodcastDialog = () => {
         </div>
 
         <DialogContent>
-          <DialogContentText>
-            {currentPodcast?.description}
-          </DialogContentText>
+        {podcastShow ? (
+            <DialogTabs podcastShow={podcastShow} />
+          ) : (
+            <p>Loading...</p>
+          )}
         </DialogContent>
 
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Disagree
-          </Button>
           <Button onClick={handleClose} autoFocus>
-            Agree
+            Close
           </Button>
         </DialogActions>
 
