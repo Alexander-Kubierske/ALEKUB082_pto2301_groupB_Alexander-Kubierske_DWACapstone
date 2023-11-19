@@ -1,8 +1,18 @@
 import React from 'react';
-import { Tabs, Tab, Box, Accordion, AccordionSummary, AccordionDetails, Typography, Button } from '@mui/material';
-import { Episode, PodcastShow, Season } from '../services/podcastInterfaces';
+import {
+  Tabs,
+  Tab,
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Button,
+} from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+
+import { Episode, PodcastShow, Season } from '../services/podcastInterfaces';
 import { usePlayerStore } from '../store/playerStore';
 
 interface DialogTabsProps {

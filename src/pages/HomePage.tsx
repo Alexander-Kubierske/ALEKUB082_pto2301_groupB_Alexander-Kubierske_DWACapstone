@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { genres } from "../services/podcastAPICalls";
-import Carousel from "../components/Carousel";
+import { Carousel, Navbar} from "../components/componentIndex";
 import PodcastDialog from "../components/PodcastDialog";
 
 const HomePage = () => {
@@ -17,6 +16,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <Navbar/>
             {CarouselGenres}
             <PodcastDialog/>
         </div>

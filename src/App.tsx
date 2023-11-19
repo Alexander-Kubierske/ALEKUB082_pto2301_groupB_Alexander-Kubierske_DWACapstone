@@ -1,11 +1,12 @@
 import './App.css'
 import { useEffect } from "react";
-import { Navbar, MediumCard, Carousel } from './components/componentIndex';
-import { HomePage } from './pages/pageIndex';
+import { HomePage, SearchPage } from './pages/pageIndex';
 import { usePodcastPreviewStore } from './store/storeIndex';
+import { usePageStore } from './store/storeIndex';
 
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
+  const { activePage } = usePageStore()
 
   useEffect(() => { // fetching our Podcast Preview data at the highest level component
     if (data.length === 0) {
@@ -13,17 +14,18 @@ function App() {
     }
   }, []);
 
-  const cardElements = data.map((podcast) => (
-    <MediumCard key={podcast.id} {...podcast} />
-  ));
-
   return (
     <>
-      <Navbar/>
-      <HomePage/>
+      {activePage === 'home' && <HomePage/>}
+      {activePage === 'search' && <SearchPage/>}
+
     </>
     
   )
 }
 
 export default App
+
+// {activePage === 'profile' && <HomePage/>}
+// {activePage === 'player' && <HomePage/>}
+// {activePage === 'login' && <HomePage/>}

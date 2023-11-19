@@ -21,7 +21,12 @@ body {
   padding: 1vh;
 }
 
-.search--container {
+.navbar--search--container {
   padding-right: 0.625rem;
   margin-left: auto;
+}
+
+.search--page--container {
+  margin-left: auto;
+  width: 500px;
 }

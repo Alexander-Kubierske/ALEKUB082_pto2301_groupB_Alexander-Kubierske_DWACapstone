@@ -47,10 +47,6 @@ const ItemContainer = styled.div`
   transition: transform 250ms ease-in-out;
 `;
 
-const Placeholder = styled.img`
-  /* Add styling for the images inside the slider */
-`;
-
 const Carousel = (props: CarouselProps) => {
     const {data} = usePodcastPreviewStore();
     const {genre} = props;

@@ -1,7 +1,8 @@
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
-import { Podcast } from "../services/podcastInterfaces";
+
+import { Podcast } from '../services/podcastInterfaces';
 import { usePodcastInfoStore } from '../store/storeIndex';
 
 export default function MediumCard(cardProps: Podcast) {

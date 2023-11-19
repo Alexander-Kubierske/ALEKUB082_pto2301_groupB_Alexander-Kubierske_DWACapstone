@@ -1,17 +1,22 @@
-import React, { useState, useEffect} from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import React, { useState, useEffect } from 'react';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  useMediaQuery,
+  useTheme,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import { usePodcastInfoStore, usePodcastPreviewStore } from '../store/storeIndex';
-import Typography from '@mui/material/Typography';
 import DialogTabs from './DialogTabs';
 import PodcastFetchRequests from '../services/podcastAPICalls';
 import { PodcastShow } from '../services/podcastInterfaces';
-import {Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const PodcastDialog = () => {
   const [podcastShow, setPodcastShow] = useState<PodcastShow | null>(null);
