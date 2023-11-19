@@ -16,19 +16,12 @@ body {
 
 .logo--button {
   border-radius: 50%;
-  max-height: 100%;
-  max-width: 100px;
-  flex-shrink: 0;
+  max-height: 10vh;
+  max-width: 6.25rem;
+  padding: 1vh;
 }
 
 .search--container {
-  padding-right: 10px;
-}
-
-.nav--hidden {
-  display: none;
-}
-
-.MuiAccordionSummary-expandIconWrapper {
-  transform: rotate(0);
+  padding-right: 0.625rem;
+  margin-left: auto;
 }

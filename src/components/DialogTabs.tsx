@@ -4,20 +4,10 @@ import { Episode, PodcastShow, Season } from '../services/podcastInterfaces';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import { usePlayerStore } from '../store/playerStore';
-import styled from 'styled-components';
 
 interface DialogTabsProps {
   podcastShow: PodcastShow | null;
 }
-
-const ExpandIconWrapper = styled.div`
-
-    transform: rotate(0deg);
-
-    &.Mui-expanded {
-        transform: rotate(0deg);
-    }
-`;
 
 const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
   const [seasonsTabValue, setSeasonsTabValue] = React.useState(1);

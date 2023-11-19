@@ -4,8 +4,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Slide from '@mui/material/Slide';
 import { Search, AccountCircle } from '@mui/icons-material';
 import styled from 'styled-components';
@@ -28,31 +26,27 @@ function HideOnScroll(props: Props) {
   );
 }
 
-
-
-const LogoContainer = styled.button`
-    margin-right: auto;
+const LogoButton = () => {
+  const LogoContainer = styled.button`
     background: none;
     padding: 30;
     border: none;
     height: 100%;
     flex-shrink: 0;
 `
-
-const LogoButton = () => {
       
-    const handleButtonClick = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    };
+  const handleButtonClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
-    return (
-        <LogoContainer onClick={handleButtonClick}>
-          <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
-        </LogoContainer>
-      );
+  return (
+      <LogoContainer onClick={handleButtonClick}>
+        <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
+      </LogoContainer>
+    );
 };
 
 const SearchButton = () => {
@@ -90,6 +84,7 @@ export default function NavBar(props: Props) {
         <AppBar>
           <Toolbar>
             <LogoButton/>
+            <Typography>HitBox Radio</Typography>
             <SearchButton/>
             <ProfileButton/>
           </Toolbar>
