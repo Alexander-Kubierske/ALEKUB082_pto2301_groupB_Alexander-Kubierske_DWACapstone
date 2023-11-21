@@ -1,15 +1,15 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-interface ChipData {
+export interface ChipDataInterface {
   key: number;
   label: string;
 }
 
 interface SearchParamStore {
   checked: number[];
-  chipData: ChipData[];
+  chipData: ChipDataInterface[];
   setChecked: (newChecked: number[]) => void;
-  setChipData: (newChipData: ChipData[]) => void;
+  setChipData: (newChipData: ChipDataInterface[]) => void;
 }
 
 /**
@@ -22,12 +22,32 @@ interface SearchParamStore {
  *  @param {number[]} newChecked - The new array to set as the checked state.
  * @property {function} setChecked - A function to set the chips in the state.
  *  @param {number[]} newChecked - The new array to set as the chips to be rendered.
- * 
+ *
  * @returns {UseSearchParamStore} The hook for using the store.
-*/
+ */
 export const useSearchParamStore = create<SearchParamStore>((set) => ({
   checked: [],
   chipData: [],
-  setChecked: (newChecked) => set({ checked: newChecked }),
-  setChipData: (newChipData) => set({ chipData: newChipData }),
+
+  /**
+   * Updates the `checked` state array.
+   *
+   * @function
+   * @name setChecked
+   * @memberof SearchParamStore
+   * @param {number[]} newChecked - The new array to set as the checked state.
+   * @returns {void}
+   */
+  setChecked: (newChecked) => set((state) => ({ checked: newChecked })),
+
+  /**
+   * Updates the `chipData` state array.
+   *
+   * @function
+   * @name setChipData
+   * @memberof SearchParamStore
+   * @param {ChipDataInterface[]} newChipData - The new array to set as the chips to be rendered.
+   * @returns {void}
+   */
+  setChipData: (newChipData) => set((state) => ({ chipData: newChipData })),
 }));

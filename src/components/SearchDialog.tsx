@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   List,
   ListItem,
@@ -11,71 +11,133 @@ import {
   DialogContent,
   DialogTitle,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useSearchParamStore } from '../store/searchParamStore';
-import { genres } from '../services/podcastAPICalls';
-import MenuIcon from '@mui/icons-material/Menu';
+import {
+  useSearchParamStore,
+  ChipDataInterface,
+} from "../store/searchParamStore";
+import { genres } from "../services/podcastAPICalls";
+import MenuIcon from "@mui/icons-material/Menu";
 
 // <=========== CheckBox Func ===========>
-  
+
+const genreArray = (Object.entries(genres) as [string, string][]).map(
+  ([genreId, genreName]) => ({
+    genreId,
+    genreName,
+  })
+);
+
+interface OptionInterface {
+  label: string;
+  value: number;
+}
+
+const options: OptionInterface[] = [
+  { label: "A-Z", value: 0 },
+  { label: "Z-A", value: 1 },
+  { label: "Date Newest", value: 2 },
+  { label: "Date Oldest", value: 3 },
+  ...genreArray.map(({ genreName }, index) => ({
+    label: genreName,
+    value: index + 4,
+  })),
+];
+
 const CheckboxList = () => {
   const { checked, chipData, setChecked, setChipData } = useSearchParamStore();
+  const [isAZChecked, setIsAZChecked] = React.useState(false);
+  const [isZAChecked, setIsZAChecked] = React.useState(false);
+  const [isNewestChecked, setIsNewestChecked] = React.useState(false);
+  const [isOldestChecked, setIsOldestChecked] = React.useState(false);
 
-console.log("chipdata in dialogue:", Array.isArray(chipData), chipData)// chiplog
-  
-  const handleToggle = (value: number) => () => { // need to pass this the options array specifically the label for each chip
+  React.useEffect(() => {
+    setIsAZChecked(checked.includes(0));
+    setIsZAChecked(checked.includes(1));
+    setIsNewestChecked(checked.includes(2));
+    setIsOldestChecked(checked.includes(3));
+  }, [checked]);
+
+  const handleToggle = (value: number, options: OptionInterface[]) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      console.log("chipdata currentIndex === -1", Array.isArray(chipData)) // chiplog
-      const newChip = { key: value, label: `${value}` };
-      const newChipArrayAdd = (chips) => (Array.isArray(chips) ? [...chips, newChip] : [newChip])
-      setChipData(newChipArrayAdd(newChip));
-      console.log("chipdata currentIndex === -1", Array.isArray(chipData), chipData) // chiplog
+      // if the item is not in the checked array we add it
+      const newChip: ChipDataInterface = {
+        key: value,
+        label: `${options[value].label}`,
+      };
+
+      /**
+       * Adds a new chip to the array of chips.
+       *
+       * @function
+       * @param {ChipDataInterface[]} chipsToAdd - The existing array of chips to which the new chip will be added.
+       * @param {ChipDataInterface} newChip - The new chip to be added to the array.
+       * @returns {ChipDataInterface[]} The updated array of chips after adding the new chip.
+       */
+      const newChipArrayAdd = (
+        chipData: ChipDataInterface[],
+        newChip: ChipDataInterface
+      ) => [...chipData, newChip];
+      setChipData(newChipArrayAdd(chipData, newChip));
+      newChecked.push(value);
     } else {
-      console.log("chipdata currentIndex === -1 (false)", Array.isArray(chipData)) // chiplog
-      const newChipArrayDelete = (chips) => (Array.isArray(chips) ? chips.filter((chip) => chip.key !== value) : [])
+      // else it will be in the checked array so we delete it
+      /**
+       * Deletes a chip from the array of chips based on its key.
+       *
+       * @function
+       * @param {ChipDataInterface[]} chipsToDelete - The existing array of chips from which the specified chip will be deleted.
+       * @param {number} value - The key of the chip to be deleted.
+       * @returns {ChipDataInterface[]} The updated array of chips after deleting the specified chip.
+       */
+      const newChipArrayDelete = (chipsToDelete: ChipDataInterface[]) =>
+        chipsToDelete.filter((chip) => chip.key !== value);
       setChipData(newChipArrayDelete(chipData));
       newChecked.splice(currentIndex, 1);
     }
 
     setChecked(newChecked);
+    setIsAZChecked(checked.includes(0));
+    setIsZAChecked(checked.includes(1));
+    setIsNewestChecked(checked.includes(3));
+    setIsOldestChecked(checked.includes(4));
   };
 
-  const genreArray = (Object.entries(genres) as [string, string][]).map(([genreId, genreName]) => ({
-      genreId,
-      genreName,
-  }));
-
-  const options = [
-      { label: 'A-Z', value: 0 },
-      { label: 'Z-A', value: 1 },
-      { label: 'Date Newest', value: 2 },
-      { label: 'Date Oldest', value: 3 },
-      ...genreArray.map(({ genreName }, index) => ({ label: genreName, value: index + 4 })),
-  ];
-
   return (
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {options.map(({ label, value }) => (
-          <ListItem key={value}>
-          <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-              <ListItemIcon>
+        <ListItem key={value}>
+          <ListItemButton
+            role={undefined}
+            onClick={handleToggle(value, options)}
+            dense
+          >
+            <ListItemIcon>
               <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': `checkbox-list-label-${value}` }}
+                edge="start"
+                checked={checked.indexOf(value) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{
+                  "aria-labelledby": `checkbox-list-label-${value}`,
+                }}
+                disabled={
+                  (value === 0 && isZAChecked) ||
+                  (value === 1 && isAZChecked) ||
+                  (value === 2 && isOldestChecked) ||
+                  (value === 3 && isNewestChecked)
+                }
               />
-              </ListItemIcon>
-              <ListItemText primary={label} />
+            </ListItemIcon>
+            <ListItemText primary={label} />
           </ListItemButton>
-          </ListItem>
+        </ListItem>
       ))}
-      </List>
+    </List>
   );
 };
 
@@ -94,21 +156,19 @@ const SortingDialog = () => {
 
   return (
     <React.Fragment>
-        <Button onClick={handleClickOpen}>
-          <MenuIcon sx={{ color: 'black' }}/>
-        </Button>
+      <Button onClick={handleClickOpen}>
+        <MenuIcon sx={{ color: "black" }} />
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
       >
-        <DialogTitle id="dialog-title">
-          {"Search Options"}
-        </DialogTitle>
+        <DialogTitle id="dialog-title">{"Search Options"}</DialogTitle>
         <DialogContent>
           <div id="dialog-description">
-            <CheckboxList/>
+            <CheckboxList />
           </div>
         </DialogContent>
         <DialogActions>
