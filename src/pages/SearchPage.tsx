@@ -21,6 +21,7 @@ import {
   useSearchParamStore,
   ChipDataInterface,
 } from "../store/searchParamStore";
+import { usePageStore } from "../store/storeIndex";
 import SortingDialog from "../components/SearchDialog";
 
 // <=========== Navbar hide ===========>
@@ -120,7 +121,12 @@ const SearchNavBarStyled = styledComponent.div`
 `;
 const SearchNavBar = () => {
   const theme = useTheme();
+  const { setActivePage } = usePageStore();
   const { chipData, setChipData } = useSearchParamStore();
+
+  const handleExitClick = () => {
+    setActivePage("home");
+  };
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -142,7 +148,7 @@ const SearchNavBar = () => {
 
   return (
     <SearchNavBarStyled>
-      <Button>
+      <Button onClick={handleExitClick}>
         <CloseIcon sx={{ color: "black" }} />
       </Button>
 
