@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Button,
 } from '@mui/material';
@@ -21,18 +20,25 @@ import MenuIcon from '@mui/icons-material/Menu';
 // <=========== CheckBox Func ===========>
   
 const CheckboxList = () => {
-  const { checked, setChecked, setChipData } = useSearchParamStore();
+  const { checked, chipData, setChecked, setChipData } = useSearchParamStore();
 
-  const handleToggle = (value: number) => () => {
+console.log("chipdata in dialogue:", Array.isArray(chipData), chipData)// chiplog
+  
+  const handleToggle = (value: number) => () => { // need to pass this the options array specifically the label for each chip
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
-      setChipData((chips) => [...chips, { key: value, label: `Option ${value}` }]);
+      console.log("chipdata currentIndex === -1", Array.isArray(chipData)) // chiplog
+      const newChip = { key: value, label: `${value}` };
+      const newChipArrayAdd = (chips) => (Array.isArray(chips) ? [...chips, newChip] : [newChip])
+      setChipData(newChipArrayAdd(newChip));
+      console.log("chipdata currentIndex === -1", Array.isArray(chipData), chipData) // chiplog
     } else {
+      console.log("chipdata currentIndex === -1 (false)", Array.isArray(chipData)) // chiplog
+      const newChipArrayDelete = (chips) => (Array.isArray(chips) ? chips.filter((chip) => chip.key !== value) : [])
+      setChipData(newChipArrayDelete(chipData));
       newChecked.splice(currentIndex, 1);
-      setChipData((chips) => chips.filter((chip) => chip.key !== value));
     }
 
     setChecked(newChecked);
@@ -101,9 +107,9 @@ const SortingDialog = () => {
           {"Search Options"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="dialog-description">
+          <div id="dialog-description">
             <CheckboxList/>
-          </DialogContentText>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus>

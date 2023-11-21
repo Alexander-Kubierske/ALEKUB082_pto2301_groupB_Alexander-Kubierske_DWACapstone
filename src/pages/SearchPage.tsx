@@ -96,10 +96,11 @@ const ListItemStyled = styled('li')(({ theme }) => ({
 
 const ChipsArray = () => {
   const { chipData, setChipData, setChecked } = useSearchParamStore();
-
+  console.log("chipdata in array:", Array.isArray(chipData))// chiplog
   const handleDelete = (chipToDelete: ChipData) => () => {
-    setChipData(chips => chips.filter((chip) => chip.key !== chipToDelete.key));
-    setChecked(prevChecked => prevChecked.filter((value) => value !== chipToDelete.key));
+    const updatedChipData = chipData.filter((chip) => chip.key !== chipToDelete.key);
+    setChipData(updatedChipData);
+    setChecked((prevChecked: number[]) => prevChecked.filter((value) => value !== chipToDelete.key));
   };
 
   return (
