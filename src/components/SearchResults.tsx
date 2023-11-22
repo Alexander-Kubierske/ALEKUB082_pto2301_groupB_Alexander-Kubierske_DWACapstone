@@ -135,17 +135,30 @@ const FusySearch = () => {
       )
     ) {
       if (isZALabelPresent) {
-        const sortedResult = finalResult
-          .slice()
-          .sort((a, b) => b.title.localeCompare(a.title));
-        setFinalResult(sortedResult);
+        finalResult.sort((title1, title2) => {
+          title1 = title1.title.toLocaleLowerCase();
+          title2 = title2.title.toLocaleLowerCase();
+          if (title1 < title2) {
+            return 1;
+          }
+          if (title1 > title2) {
+            return -1;
+          }
+          return 0;
+        });
         console.log("sorted z-a");
       } else {
-        const sortedResult = finalResult
-          .slice()
-          .sort((a, b) => a.title.localeCompare(b.title));
-        setFinalResult(sortedResult);
-        console.log("sorted z-a");
+        finalResult.sort((title1, title2) => {
+          title1 = title1.title.toLocaleLowerCase();
+          title2 = title2.title.toLocaleLowerCase();
+          if (title1 < title2) {
+            return -1;
+          }
+          if (title1 > title2) {
+            return 1;
+          }
+          return 0;
+        });
       }
 
       let sortedResults = finalResult.slice();
