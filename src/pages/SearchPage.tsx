@@ -24,6 +24,8 @@ import {
 import { usePageStore } from "../store/storeIndex";
 import SortingDialog from "../components/SearchDialog";
 
+import FusySearch from "../components/SearchResults";
+
 // <=========== Navbar hide ===========>
 
 interface Props {
@@ -199,7 +201,7 @@ const SearchPage = () => {
 
       <ChipsArray />
 
-      {/** results */}
+      <FusySearch />
     </React.Fragment>
   );
 };
