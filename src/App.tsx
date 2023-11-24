@@ -1,8 +1,7 @@
 import "./App.css";
 import { useEffect } from "react";
-import { HomePage, SearchPage } from "./pages/pageIndex";
-import { usePodcastPreviewStore } from "./store/storeIndex";
-import { usePageStore } from "./store/storeIndex";
+import { HomePage, SearchPage, LoginPage } from "./pages/1pageIndex";
+import { usePodcastPreviewStore, usePageStore } from "./store/1storeIndex";
 
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
@@ -17,14 +16,15 @@ function App() {
 
   return (
     <>
-      {activePage === "home" && <HomePage />}
-      {activePage === "search" && <SearchPage />}
+      <LoginPage />
     </>
   );
 }
 
 export default App;
 
+// {activePage === "home" && <HomePage />}
+// {activePage === "search" && <SearchPage />}
 // {activePage === 'profile' && <HomePage/>}
 // {activePage === 'player' && <HomePage/>}
 // {activePage === 'login' && <HomePage/>}

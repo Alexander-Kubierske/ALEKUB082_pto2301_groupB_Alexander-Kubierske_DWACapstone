@@ -4,7 +4,7 @@ import {
   usePodcastPreviewStore,
   useSearchParamStore,
   ChipDataInterface,
-} from "../store/storeIndex";
+} from "../store/1storeIndex";
 import { Podcast } from "../services/podcastInterfaces";
 import { genres } from "../services/podcastAPICalls";
 import SearchResultCards from "./SearchResultCards";

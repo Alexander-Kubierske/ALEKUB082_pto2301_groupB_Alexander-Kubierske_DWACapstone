@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,19 +6,19 @@ import {
   CssBaseline,
   useScrollTrigger,
   Slide,
-} from '@mui/material';
-import { Search, AccountCircle } from '@mui/icons-material';
-import styled from 'styled-components';
+} from "@mui/material";
+import { Search, AccountCircle } from "@mui/icons-material";
+import styled from "styled-components";
 
-import { usePageStore } from '../store/storeIndex';
+import { usePageStore } from "../store/1storeIndex";
 
 const LogoContainer = styled.button`
-    background: none;
-    padding: 30;
-    border: none;
-    height: 100%;
-    flex-shrink: 0;
-`
+  background: none;
+  padding: 30;
+  border: none;
+  height: 100%;
+  flex-shrink: 0;
+`;
 
 interface Props {
   children: React.ReactElement;
@@ -41,43 +41,40 @@ const NavBar = () => {
   const { setActivePage } = usePageStore();
 
   const LogoButton = () => {
-      
     const handleButtonClick = () => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     };
-  
+
     return (
-        <LogoContainer onClick={handleButtonClick}>
-          <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
-        </LogoContainer>
-      );
+      <LogoContainer onClick={handleButtonClick}>
+        <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
+      </LogoContainer>
+    );
   };
-  
+
   const SearchButton = () => {
-  
     const handleSearchClick = () => {
-      setActivePage('search')
+      setActivePage("search");
     };
-  
+
     return (
       <div className="navbar--search--container" onClick={handleSearchClick}>
-        <Search fontSize="large"/>
+        <Search fontSize="large" />
       </div>
     );
   };
-  
+
   const ProfileButton = () => {
-  
     const handleProfileClick = () => {
-      console.log("is my pfp hot?")
+      console.log("is my pfp hot?");
     };
-    
+
     return (
       <div className="profile-container" onClick={handleProfileClick}>
-        <AccountCircle fontSize="large"/>
+        <AccountCircle fontSize="large" />
       </div>
     );
   };
@@ -88,9 +85,9 @@ const NavBar = () => {
       <HideOnScroll>
         <AppBar>
           <Toolbar>
-            <LogoButton/>
+            <LogoButton />
             <Typography>HitBox Radio</Typography>
-            <SearchButton/>
+            <SearchButton />
             <ProfileButton />
           </Toolbar>
         </AppBar>
@@ -100,4 +97,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar
+export default NavBar;

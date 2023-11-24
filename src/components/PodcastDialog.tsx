@@ -16,7 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   usePodcastInfoStore,
   usePodcastPreviewStore,
-} from "../store/storeIndex";
+} from "../store/1storeIndex";
 import DialogTabs from "./DialogTabs";
 import PodcastFetchRequests from "../services/podcastAPICalls";
 import { PodcastShow } from "../services/podcastInterfaces";

@@ -13,7 +13,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 
 import { Episode, PodcastShow, Season } from "../services/podcastInterfaces";
-import { usePlayerStore } from "../store/playerStore";
+import { usePlayerStore } from "../store/1storeIndex";
 
 interface DialogTabsProps {
   podcastShow: PodcastShow | null;

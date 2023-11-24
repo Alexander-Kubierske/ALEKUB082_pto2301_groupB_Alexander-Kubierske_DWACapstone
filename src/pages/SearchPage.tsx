@@ -21,10 +21,12 @@ import {
   useSearchParamStore,
   ChipDataInterface,
 } from "../store/searchParamStore";
-import { usePageStore } from "../store/storeIndex";
-import SortingDialog from "../components/SearchDialog";
-import PodcastDialog from "../components/PodcastDialog";
-import FusySearch from "../components/SearchResults";
+import { usePageStore } from "../store/1storeIndex";
+import {
+  SortingDialog,
+  PodcastDialog,
+  FusySearch,
+} from "../components/1componentIndex";
 
 // <=========== Navbar hide ===========>
 

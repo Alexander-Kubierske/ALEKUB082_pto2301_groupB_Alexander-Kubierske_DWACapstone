@@ -1,7 +1,7 @@
-import { MediumCard } from './componentIndex';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import styled from 'styled-components';
-import { usePodcastPreviewStore } from '../store/storeIndex';
+import { MediumCard } from "./1componentIndex";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import styled from "styled-components";
+import { usePodcastPreviewStore } from "../store/1storeIndex";
 
 interface CarouselProps {
   key: string;
@@ -9,13 +9,13 @@ interface CarouselProps {
 }
 
 const CarouselContainer = styled.div`
-  background: #D3D3D3;
+  background: #d3d3d3;
 `;
 
 const CarouselHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: .5rem calc(var(--img-gap) * 2 + var(--handle-size));
+  padding: 0.5rem calc(var(--img-gap) * 2 + var(--handle-size));
   align-items: center;
 `;
 
@@ -48,20 +48,16 @@ const ItemContainer = styled.div`
 `;
 
 const Carousel = (props: CarouselProps) => {
-    const {data} = usePodcastPreviewStore();
-    const {genre} = props;
-    const genreFilter = data.filter(podcast => podcast.genres.includes(genre))
+  const { data } = usePodcastPreviewStore();
+  const { genre } = props;
+  const genreFilter = data.filter((podcast) => podcast.genres.includes(genre));
 
-    const CardSelection = genreFilter.slice(0, 10).map(item => {
-        return (
-            <MediumCard key={item.id} {...item}/>
-        )
-    });
+  const CardSelection = genreFilter.slice(0, 10).map((item) => {
+    return <MediumCard key={item.id} {...item} />;
+  });
 
-    
   return (
     <CarouselContainer>
-
       <CarouselHeader>
         <h3>{genre}</h3>
         <ProgressBar></ProgressBar>
@@ -69,25 +65,20 @@ const Carousel = (props: CarouselProps) => {
       </CarouselHeader>
 
       <SliderContainer>
-
         <HandleButton className="handle handle-left">
           <ChevronLeft />
         </HandleButton>
 
-        <ItemContainer>
-            {CardSelection}
-        </ItemContainer>
+        <ItemContainer>{CardSelection}</ItemContainer>
 
         <HandleButton className="handle handle-right">
           <ChevronRight />
         </HandleButton>
-
       </SliderContainer>
-
     </CarouselContainer>
   );
 };
 
 export default Carousel;
 
-// my map function gets passed the genre id 
+// my map function gets passed the genre id

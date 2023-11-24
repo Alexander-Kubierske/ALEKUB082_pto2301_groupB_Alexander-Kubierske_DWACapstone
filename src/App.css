@@ -55,3 +55,10 @@ body {
   flex-direction: column;
   margin-left: 0.5rem
 }
+
+.login--container {
+  max-width: 75%;
+  margin-right: 12.5%;
+  margin-left: 12.5%;
+  margin-top: 17vh;
+}

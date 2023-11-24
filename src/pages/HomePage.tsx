@@ -1,7 +1,10 @@
 import { genres } from "../services/podcastAPICalls";
-import { Carousel, Navbar } from "../components/componentIndex";
-import PodcastDialog from "../components/PodcastDialog";
-import PlayerBar from "../components/PlayerBar";
+import {
+  Carousel,
+  Navbar,
+  PodcastDialog,
+  PlayerBar,
+} from "../components/1componentIndex";
 
 const HomePage = () => {
   const genreArray = (Object.entries(genres) as [string, string][]).map(
