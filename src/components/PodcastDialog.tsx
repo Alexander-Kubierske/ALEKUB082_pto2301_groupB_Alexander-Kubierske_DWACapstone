@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -10,29 +10,37 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { usePodcastInfoStore, usePodcastPreviewStore } from '../store/storeIndex';
-import DialogTabs from './DialogTabs';
-import PodcastFetchRequests from '../services/podcastAPICalls';
-import { PodcastShow } from '../services/podcastInterfaces';
+import {
+  usePodcastInfoStore,
+  usePodcastPreviewStore,
+} from "../store/storeIndex";
+import DialogTabs from "./DialogTabs";
+import PodcastFetchRequests from "../services/podcastAPICalls";
+import { PodcastShow } from "../services/podcastInterfaces";
 
 const PodcastDialog = () => {
   const [podcastShow, setPodcastShow] = useState<PodcastShow | null>(null);
-  const { visible, currentPodcastId, toggleVisible, setId } = usePodcastInfoStore();
+  const { visible, currentPodcastId, toggleVisible, setId } =
+    usePodcastInfoStore();
   const { data } = usePodcastPreviewStore();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const currentPodcast = data.find(podcast => podcast.id === currentPodcastId);
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const currentPodcast = data.find(
+    (podcast) => podcast.id === currentPodcastId
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await PodcastFetchRequests.fetchPodcastShow(currentPodcastId);
+        const data = await PodcastFetchRequests.fetchPodcastShow(
+          currentPodcastId
+        );
         setPodcastShow(data);
       } catch (error) {
-        console.error('Error fetching podcast data:', error);
+        console.error("Error fetching podcast data:", error);
       }
     };
 
@@ -40,26 +48,27 @@ const PodcastDialog = () => {
   }, [currentPodcastId]);
 
   const handleClose = () => {
-    toggleVisible()
-    setId(0)
+    toggleVisible();
+    setId(0);
   };
 
   const handlePlay = () => {
-    console.log(`now playing `, currentPodcast?.title)
-  }
+    console.log(`now playing `, currentPodcast?.title);
+  };
 
   const dialogHeaderStyles = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: '20%', // 20% of the dialog height
-    padding: '1rem',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: "20%", // 20% of the dialog height
+    padding: "1rem",
+    marginBottom: "8vh",
   };
 
   const imageStyles = {
-    maxWidth: '40%', // Adjust the width as needed
-    marginRight: '16px', // Add some margin between image and title
-    borderRadius: '8px',
+    maxWidth: "40%", // Adjust the width as needed
+    marginRight: "16px", // Add some margin between image and title
+    borderRadius: "8px",
   };
 
   return (
@@ -69,18 +78,22 @@ const PodcastDialog = () => {
         open={visible}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
-   
       >
-        <div className='dialog__header' style={dialogHeaderStyles}>
-          <img className='dialog__img' src={currentPodcast?.image} alt="Podcast Logo" style={imageStyles} onClick={handlePlay}></img>
-          <div className='podcast__title__info'>
+        <div className="dialog__header" style={dialogHeaderStyles}>
+          <img
+            className="dialog__img"
+            src={currentPodcast?.image}
+            alt="Podcast Logo"
+            style={imageStyles}
+          ></img>
+          <div className="podcast__title__info">
             <h1>{currentPodcast?.title}</h1>
-            <h3>Seasons: {currentPodcast?.seasons}</h3>
-            <h3>Last Update: {currentPodcast?.updated}</h3>
+            <p>Seasons: {currentPodcast?.seasons}</p>
+            <p>Last Update: {currentPodcast?.updated}</p>
           </div>
         </div>
 
-        <DialogContent style={{ overflowY: 'scroll' }}>
+        <DialogContent style={{ overflowY: "scroll" }}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -91,12 +104,10 @@ const PodcastDialog = () => {
             </AccordionSummary>
 
             <AccordionDetails>
-              <Typography>
-                {podcastShow?.description}
-              </Typography>
+              <Typography>{podcastShow?.description}</Typography>
             </AccordionDetails>
-        </Accordion>
-        {podcastShow ? (
+          </Accordion>
+          {podcastShow ? (
             <DialogTabs podcastShow={podcastShow} />
           ) : (
             <p>Loading...</p>
@@ -108,7 +119,6 @@ const PodcastDialog = () => {
             Close
           </Button>
         </DialogActions>
-
       </Dialog>
     </React.Fragment>
   );

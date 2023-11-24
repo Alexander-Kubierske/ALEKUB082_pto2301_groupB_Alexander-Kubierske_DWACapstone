@@ -14,7 +14,7 @@ function App() {
       fetchData();
     }
   }, []);
-  console.log(data);
+
   return (
     <>
       {activePage === "home" && <HomePage />}

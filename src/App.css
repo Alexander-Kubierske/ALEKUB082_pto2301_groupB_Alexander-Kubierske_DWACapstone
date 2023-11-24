@@ -30,3 +30,28 @@ body {
   margin-left: auto;
   width: 500px;
 }
+
+.search--Results{
+  padding: 0.5rem;
+}
+
+.search--Result--Container {
+  display: flex;
+  flex-direction: row;
+  border: solid #8a8787 0.01rem;
+  border-radius: 5vw;
+  padding: 0.3rem;
+  margin: 0.2rem;
+}
+
+.search--Result--Img {
+  width: 32vw;
+  border-radius: 5vw;
+}
+
+.search--Result--text{
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  margin-left: 0.5rem
+}

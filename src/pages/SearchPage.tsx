@@ -23,7 +23,7 @@ import {
 } from "../store/searchParamStore";
 import { usePageStore } from "../store/storeIndex";
 import SortingDialog from "../components/SearchDialog";
-
+import PodcastDialog from "../components/PodcastDialog";
 import FusySearch from "../components/SearchResults";
 
 // <=========== Navbar hide ===========>
@@ -202,6 +202,7 @@ const SearchPage = () => {
       <ChipsArray />
 
       <FusySearch />
+      <PodcastDialog />
     </React.Fragment>
   );
 };

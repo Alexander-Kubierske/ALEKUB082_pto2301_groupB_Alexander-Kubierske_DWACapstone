@@ -7,6 +7,7 @@ import {
 } from "../store/storeIndex";
 import { Podcast } from "../services/podcastInterfaces";
 import { genres } from "../services/podcastAPICalls";
+import SearchResultCards from "./SearchResultCards";
 
 const FusySearch = () => {
   const { data } = usePodcastPreviewStore();
@@ -71,25 +72,13 @@ const FusySearch = () => {
       includeGenres
     );
 
-    console.log(
-      "queries:",
-      chipData,
-      "\n titles:",
-      extractedTitle,
-      "\n genres:",
-      extractedGenres
-    );
-
     // Perform the search based on title
     const searchQueryTitle = {
       title: extractedTitle.join(" "),
     };
 
-    console.log("searchquery title:", searchQueryTitle);
-
     const fuseTitle = new Fuse<Podcast>(data, searchOptions);
     const titleResults = fuseTitle.search(searchQueryTitle);
-    console.log("Title results:", titleResults);
 
     // Perform the search based on genres only if there are genre queries
     let genreResults: Podcast[] = [];
@@ -98,7 +87,6 @@ const FusySearch = () => {
         genres: extractedGenres.join(" "),
       };
 
-      console.log("searchquery genres:", searchQueryGenre);
       // Use title results for genre search if available, otherwise use the entire dataset
       const dataForGenreSearch =
         titleResults.length > 0
@@ -110,8 +98,6 @@ const FusySearch = () => {
         .search(searchQueryGenre)
         .map((result) => result.item);
     }
-
-    console.log("Genre results:", genreResults);
 
     setFinalResult((prevResult: Podcast[]) => {
       if (genreResults.length > 0) {
@@ -135,30 +121,17 @@ const FusySearch = () => {
       )
     ) {
       if (isZALabelPresent) {
-        finalResult.sort((title1, title2) => {
-          title1 = title1.title.toLocaleLowerCase();
-          title2 = title2.title.toLocaleLowerCase();
-          if (title1 < title2) {
-            return 1;
-          }
-          if (title1 > title2) {
-            return -1;
-          }
-          return 0;
-        });
-        console.log("sorted z-a");
+        const sortedFinalResultAscending = finalResult
+          .slice()
+          .sort((a, b) => b.title.localeCompare(a.title));
+        console.log("a-z============> \n\n", sortedFinalResultAscending);
+        setFinalResult(sortedFinalResultAscending);
       } else {
-        finalResult.sort((title1, title2) => {
-          title1 = title1.title.toLocaleLowerCase();
-          title2 = title2.title.toLocaleLowerCase();
-          if (title1 < title2) {
-            return -1;
-          }
-          if (title1 > title2) {
-            return 1;
-          }
-          return 0;
-        });
+        const sortedFinalResultDescending = finalResult
+          .slice()
+          .sort((a, b) => a.title.localeCompare(b.title));
+        console.log("a-z============> \n\n", sortedFinalResultDescending);
+        setFinalResult(sortedFinalResultDescending);
       }
 
       let sortedResults = finalResult.slice();
@@ -181,10 +154,11 @@ const FusySearch = () => {
     }
   }, [chipData]);
 
-  // You can use finalResult in your component now
-  console.log("Final results:", finalResult);
-
-  return <div></div>;
+  return (
+    <div>
+      <SearchResultCards props={finalResult} />
+    </div>
+  );
 };
 
 export default FusySearch;
