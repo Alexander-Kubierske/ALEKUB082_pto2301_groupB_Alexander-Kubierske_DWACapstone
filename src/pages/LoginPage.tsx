@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, Tab, Typography, Box, Paper } from "@mui/material";
-import { LoginForm, SignUpForm } from "../components/1componentIndex.ts";
+import { LoginForm, SignUpForm, Navbar } from "../components/1componentIndex.ts";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,37 +48,39 @@ const LoginPage = () => {
     setValue(newValue);
   };
   return (
-    <Paper className="login--container">
-      <Typography>HitBox</Typography>
-      <div className="login--form">
-        <Box sx={{ width: "100%" }}>
-          <Box
-            sx={{
-              borderBottom: 1,
-              borderColor: "divider",
-              display: "flex",
-              justifyContent: "center",
-            }}
-            className="tab--container"
-          >
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
+    <div> 
+      <Navbar/>
+      <Paper className="login--container">
+        <div className="login--form">
+          <Box sx={{ width: "100%" }}>
+            <Box
+              sx={{
+                borderBottom: 1,
+                borderColor: "divider",
+                display: "flex",
+                justifyContent: "center",
+              }}
+              className="tab--container"
             >
-              <Tab label="Login" {...a11yProps(0)} />
-              <Tab label="Sign Up" {...a11yProps(1)} />
-            </Tabs>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Login" {...a11yProps(0)} />
+                <Tab label="Sign Up" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+              <LoginForm />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              <SignUpForm />
+            </CustomTabPanel>
           </Box>
-          <CustomTabPanel value={value} index={0}>
-            <LoginForm />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <SignUpForm />
-          </CustomTabPanel>
-        </Box>
-      </div>
-    </Paper>
+        </div>
+      </Paper>
+    </div>
   );
 };
 

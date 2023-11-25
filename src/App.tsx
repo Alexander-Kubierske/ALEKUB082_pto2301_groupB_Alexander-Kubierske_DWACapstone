@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect } from "react";
 import { HomePage, SearchPage, LoginPage } from "./pages/1pageIndex";
+import AppRouter from "./Router/AppRouter";
 import { usePodcastPreviewStore, usePageStore } from "./store/1storeIndex";
 
 function App() {
