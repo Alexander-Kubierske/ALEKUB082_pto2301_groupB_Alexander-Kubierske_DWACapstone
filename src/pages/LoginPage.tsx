@@ -43,13 +43,14 @@ function a11yProps(index: number) {
 
 const LoginPage = () => {
   const [value, setValue] = React.useState(0);
+  const buttonRender = 'login';
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
     <div> 
-      <Navbar/>
+      <Navbar buttonRender={buttonRender}/>
       <Paper className="login--container">
         <div className="login--form">
           <Box sx={{ width: "100%" }}>

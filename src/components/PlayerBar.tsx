@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AppBar } from "@mui/material";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { usePlayerStore } from "../store/playerStore";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
@@ -58,7 +57,6 @@ const PlayerBar = () => {
         ref={audioPlayerRef}
         src={currentEpisode?.file}
         autoPlay={isPlaying}
-        onPlay={console.log(currentEpisode)}
         customControlsSection={[
           <h3 style={{ color: "#868686" }}>{currentEpisode?.title}</h3>,
           RHAP_UI.MAIN_CONTROLS,

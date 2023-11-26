@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { HomePage, LoginPage, ProfilePage, SearchPage } from '../pages/1pageIndex';
+import { HomePage, LoginPage, SearchPage } from '../pages/1pageIndex';
 
 const AppRouter = () => {
   return (
@@ -8,7 +8,7 @@ const AppRouter = () => {
       <Routes>
       <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+
         <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
@@ -16,3 +16,6 @@ const AppRouter = () => {
 };
 
 export default AppRouter;
+
+// import { HomePage, LoginPage, ProfilePage, SearchPage } from '../pages/1pageIndex';
+//         <Route path="/profile" element={<ProfilePage />} />

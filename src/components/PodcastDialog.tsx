@@ -52,10 +52,6 @@ const PodcastDialog = () => {
     setId(0);
   };
 
-  const handlePlay = () => {
-    console.log(`now playing `, currentPodcast?.title);
-  };
-
   const dialogHeaderStyles = {
     display: "flex",
     alignItems: "center",

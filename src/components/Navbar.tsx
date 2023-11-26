@@ -9,20 +9,18 @@ import {
 } from "@mui/material";
 import { Search, AccountCircle } from "@mui/icons-material";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
-import { usePageStore } from "../store/1storeIndex";
-
-const LogoContainer = styled.button`
-  background: none;
-  padding: 30;
-  border: none;
-  height: 100%;
-  flex-shrink: 0;
-`;
 
 interface Props {
   children: React.ReactElement;
 }
+
+interface NavBarProps {
+  buttonRender: string;
+}
+
+// <=========== Services ===========>
 
 function HideOnScroll(props: Props) {
   const { children } = props;
@@ -37,8 +35,26 @@ function HideOnScroll(props: Props) {
   );
 }
 
-const NavBar = () => {
-  const { setActivePage } = usePageStore();
+  const LogoContainer = styled.button`
+    background: none;
+    padding: 30;
+    border: none;
+    height: 100%;
+    flex-shrink: 0;
+  `;
+
+  // <=========== NavBar Function ===========>
+
+const NavBar: React.FC<NavBarProps> = (props) => {
+
+  /**
+  * The currently active page that the navbar can be on.
+  * string passed as prop from parent component.
+  * @type {string} One of: 'home' | 'login'
+  */
+  const currentPageRendering = props.buttonRender;
+
+  // <=========== NavBar Button Funcs===========>
 
   const LogoButton = () => {
     const handleButtonClick = () => {
@@ -50,20 +66,21 @@ const NavBar = () => {
 
     return (
       <LogoContainer onClick={handleButtonClick}>
-        <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
+        <Link to="/">
+          <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
+        </Link>
       </LogoContainer>
     );
   };
 
   const SearchButton = () => {
-    const handleSearchClick = () => {
-      setActivePage("search");
-    };
-
     return (
-      <div className="navbar--search--container" onClick={handleSearchClick}>
-        <Search fontSize="large" />
-      </div>
+      
+        <div className="navbar--search--container" to="/search">
+          <Link to="/search" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Search fontSize="large" />
+          </Link>
+        </div>
     );
   };
 
@@ -79,6 +96,8 @@ const NavBar = () => {
     );
   };
 
+  // <=========== NavBar Output ===========>
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -87,8 +106,8 @@ const NavBar = () => {
           <Toolbar>
             <LogoButton />
             <Typography>HitBox Radio</Typography>
-            <SearchButton />
-            <ProfileButton />
+            {currentPageRendering === "home" && <SearchButton />}
+            {currentPageRendering === "home" && <ProfileButton />}
           </Toolbar>
         </AppBar>
       </HideOnScroll>

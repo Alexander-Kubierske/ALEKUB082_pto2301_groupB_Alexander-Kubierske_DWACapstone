@@ -8,14 +8,47 @@ const SignUpForm = () => {
   const signInLocalization = {
     variables: {
       sign_in: {
-        link_text: "", // Customize the link text for sign in
+        link_text: "",
       },
     },
   };
 
-  const onSignup = () => {
-    console.log("signed up")
-  }
+  const test = () => console.log("test")
+
+  const onAuthStateChange = (event: any, session: any) => {
+    test()
+ 
+    if (event === 'SIGNED_IN' && session?.user?.email === userEmail) {
+
+      // onSignup(session.user);
+      
+    }
+  };
+
+  const onSignup = async (user) => {
+    try {
+      const { data, error } = await supabase
+        .from('public.users')
+        .insert(
+          {
+            user_id: user.id,
+            email: user.email,
+            favorite_eps: [null],
+            subscribed: [null],
+            progress: [null],
+          },
+        );
+
+      if (error) {
+        console.error('Error inserting user data:', error.message);
+        return;
+      }
+
+      console.log('User signed up successfully:', data);
+    } catch (error) {
+      console.error('Unhandled error:', error.message);
+    }
+  };
  
 
   // <=========== Output ===========>
@@ -26,7 +59,7 @@ const SignUpForm = () => {
       providers={[]}
       supabaseClient={supabase}
       view="sign_up"
-      onSuccess={onSignup}
+      onSuccess={onAuthStateChange}
       localization={signInLocalization}
       appearance={{
         theme: ThemeSupa,
@@ -45,4 +78,3 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
-2

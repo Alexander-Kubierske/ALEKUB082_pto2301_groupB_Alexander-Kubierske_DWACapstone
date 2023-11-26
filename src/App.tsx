@@ -1,12 +1,10 @@
 import "./App.css";
 import { useEffect } from "react";
-import { HomePage, SearchPage, LoginPage } from "./pages/1pageIndex";
 import AppRouter from "./Router/AppRouter";
-import { usePodcastPreviewStore, usePageStore } from "./store/1storeIndex";
+import { usePodcastPreviewStore } from "./store/1storeIndex";
 
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
-  const { activePage } = usePageStore();
 
   useEffect(() => {
     // fetching our Podcast Preview data at the highest level component
@@ -17,15 +15,9 @@ function App() {
 
   return (
     <>
-      <LoginPage />
+      <AppRouter />
     </>
   );
 }
 
 export default App;
-
-// {activePage === "home" && <HomePage />}
-// {activePage === "search" && <SearchPage />}
-// {activePage === 'profile' && <HomePage/>}
-// {activePage === 'player' && <HomePage/>}
-// {activePage === 'login' && <HomePage/>}

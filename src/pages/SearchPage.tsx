@@ -5,7 +5,6 @@ import {
   CssBaseline,
   useScrollTrigger,
   Slide,
-  Button,
   styled,
   useTheme,
   Chip,
@@ -13,20 +12,21 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-
 import CloseIcon from "@mui/icons-material/Close";
-
 import styledComponent from "styled-components";
+
 import {
   useSearchParamStore,
   ChipDataInterface,
 } from "../store/searchParamStore";
-import { usePageStore } from "../store/1storeIndex";
+
 import {
   SortingDialog,
   PodcastDialog,
   FusySearch,
 } from "../components/1componentIndex";
+
+import { Link } from 'react-router-dom';
 
 // <=========== Navbar hide ===========>
 
@@ -125,12 +125,7 @@ const SearchNavBarStyled = styledComponent.div`
 `;
 const SearchNavBar = () => {
   const theme = useTheme();
-  const { setActivePage } = usePageStore();
   const { chipData, setChipData } = useSearchParamStore();
-
-  const handleExitClick = () => {
-    setActivePage("home");
-  };
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -152,9 +147,10 @@ const SearchNavBar = () => {
 
   return (
     <SearchNavBarStyled>
-      <Button onClick={handleExitClick}>
-        <CloseIcon sx={{ color: "black" }} />
-      </Button>
+      <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+        <CloseIcon sx={{ color: "black" }}/> 
+      </Link>
+
 
       <Box
         sx={{
