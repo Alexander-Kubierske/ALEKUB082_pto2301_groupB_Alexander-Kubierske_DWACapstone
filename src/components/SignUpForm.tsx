@@ -1,9 +1,13 @@
+import { useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import supabase from "../services/supaBaseConnector";
-import { ThemeSupa } from '@supabase/auth-ui-shared'
-
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
 
 const SignUpForm = () => {
+  const { user, setUser } = useUserStore();
+  const navigate = useNavigate();
 
   const signInLocalization = {
     variables: {
@@ -13,66 +17,49 @@ const SignUpForm = () => {
     },
   };
 
-  const test = () => console.log("test")
-
-  const onAuthStateChange = (event: any, session: any) => {
-    test()
- 
-    if (event === 'SIGNED_IN' && session?.user?.email === userEmail) {
-
-      // onSignup(session.user);
-      
-    }
-  };
-
-  const onSignup = async (user) => {
-    try {
-      const { data, error } = await supabase
-        .from('public.users')
-        .insert(
-          {
-            user_id: user.id,
-            email: user.email,
-            favorite_eps: [null],
-            subscribed: [null],
-            progress: [null],
-          },
-        );
-
-      if (error) {
-        console.error('Error inserting user data:', error.message);
+  useEffect(() => {
+    const getUserID = async () => {
+      if (user !== "check") {
         return;
+      } else {
+        await supabase.auth.getUser().then((value) => {
+          if (value.data?.user) {
+            setUser(value.data.user.id);
+          }
+        });
       }
+    };
+    getUserID();
+  }, [user]);
 
-      console.log('User signed up successfully:', data);
-    } catch (error) {
-      console.error('Unhandled error:', error.message);
+  supabase.auth.onAuthStateChange(async (event) => {
+    if (event === "SIGNED_IN") {
+      setUser("check");
+      navigate("/");
     }
-  };
- 
+  });
 
   // <=========== Output ===========>
 
   return (
     <div>
       <Auth
-      providers={[]}
-      supabaseClient={supabase}
-      view="sign_up"
-      onSuccess={onAuthStateChange}
-      localization={signInLocalization}
-      appearance={{
-        theme: ThemeSupa,
-        variables: {
-          default: {
-            colors: {
-              brand: '#1976d2',
-              brandAccent: 'red',
+        providers={[]}
+        supabaseClient={supabase}
+        view="sign_up"
+        localization={signInLocalization}
+        appearance={{
+          theme: ThemeSupa,
+          variables: {
+            default: {
+              colors: {
+                brand: "#1976d2",
+                brandAccent: "red",
+              },
             },
           },
-        },
-      }}
-    />
+        }}
+      />
     </div>
   );
 };

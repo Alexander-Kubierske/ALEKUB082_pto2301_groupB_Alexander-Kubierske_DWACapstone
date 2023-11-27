@@ -14,7 +14,7 @@ const HomePage = () => {
     })
   );
 
-  const buttonRender = 'home';
+  const buttonRender = "home";
 
   const CarouselGenres = genreArray.map(({ genreId, genreName }) => (
     <Carousel key={genreId} genre={genreName} />
@@ -22,7 +22,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <Navbar buttonRender={buttonRender}/>
+      <Navbar buttonRender={buttonRender} />
       {CarouselGenres}
       <PodcastDialog />
       <PlayerBar />

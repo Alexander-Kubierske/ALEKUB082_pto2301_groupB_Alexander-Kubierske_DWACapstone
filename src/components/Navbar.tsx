@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import { Search, AccountCircle } from "@mui/icons-material";
 import styled from "styled-components";
-import { Link } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import supabase from "../services/supaBaseConnector";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
 
 interface Props {
   children: React.ReactElement;
@@ -35,23 +37,23 @@ function HideOnScroll(props: Props) {
   );
 }
 
-  const LogoContainer = styled.button`
-    background: none;
-    padding: 30;
-    border: none;
-    height: 100%;
-    flex-shrink: 0;
-  `;
+const LogoContainer = styled.button`
+  background: none;
+  padding: 30;
+  border: none;
+  height: 100%;
+  flex-shrink: 0;
+`;
 
-  // <=========== NavBar Function ===========>
+// <=========== NavBar Function ===========>
 
 const NavBar: React.FC<NavBarProps> = (props) => {
-
+  const navigate = useNavigate();
   /**
-  * The currently active page that the navbar can be on.
-  * string passed as prop from parent component.
-  * @type {string} One of: 'home' | 'login'
-  */
+   * The currently active page that the navbar can be on.
+   * string passed as prop from parent component.
+   * @type {string} One of: 'home' | 'login'
+   */
   const currentPageRendering = props.buttonRender;
 
   // <=========== NavBar Button Funcs===========>
@@ -67,26 +69,33 @@ const NavBar: React.FC<NavBarProps> = (props) => {
     return (
       <LogoContainer onClick={handleButtonClick}>
         <Link to="/">
-          <img src="./src/images/logo.jpg" alt="Logo" className="logo--button" />
+          <img
+            src="./src/images/logo.jpg"
+            alt="Logo"
+            className="logo--button"
+          />
         </Link>
       </LogoContainer>
     );
   };
 
   const SearchButton = () => {
+    const handleSearchClick = async () => {
+      navigate("/search");
+    };
+
     return (
-      
-        <div className="navbar--search--container" to="/search">
-          <Link to="/search" style={{ color: 'inherit', textDecoration: 'none' }}>
-            <Search fontSize="large" />
-          </Link>
-        </div>
+      <div className="navbar--search--container" onClick={handleSearchClick}>
+        <Link to="/search" style={{ color: "inherit", textDecoration: "none" }}>
+          <Search fontSize="large" />
+        </Link>
+      </div>
     );
   };
 
   const ProfileButton = () => {
-    const handleProfileClick = () => {
-      console.log("is my pfp hot?");
+    const handleProfileClick = async () => {
+      navigate("/profile");
     };
 
     return (
