@@ -24,8 +24,8 @@ const FusySearch = () => {
       findAllMatches: true,
       threshold: 0.1,
     };
+    // <=========== Extract labels ===========>
 
-    // Extract labels from chip data
     const labelExtractor = (
       chipData: ChipDataInterface[],
       chipLabelExcluder: string[]
@@ -39,7 +39,7 @@ const FusySearch = () => {
     const chipLabelExcluder = ["A-Z", "Z-A", "Date Newest", "Date Oldest"];
     const extractedChipLabels = labelExtractor(chipData, chipLabelExcluder);
 
-    // Filter labels into title and genres
+    // <=========== filter labels ===========>
     const filterLabels = (
       labels: string[],
       includeGenres: string[]
@@ -72,7 +72,7 @@ const FusySearch = () => {
       includeGenres
     );
 
-    // Perform the search based on title
+    // <=========== Search by Title ===========>
     const searchQueryTitle = {
       title: extractedTitle.join(" "),
     };
@@ -80,7 +80,7 @@ const FusySearch = () => {
     const fuseTitle = new Fuse<Podcast>(data, searchOptions);
     const titleResults = fuseTitle.search(searchQueryTitle);
 
-    // Perform the search based on genres only if there are genre queries
+    // <=========== search by Genre ===========>
     let genreResults: Podcast[] = [];
     if (extractedGenres.length > 0) {
       const searchQueryGenre = {
@@ -108,12 +108,27 @@ const FusySearch = () => {
     });
   }, [chipData]);
 
+  // <=========== Sort Data  Alphabetically ===========>
+
   React.useEffect(() => {
     const labelsToCheck = ["A-Z", "Z-A", "Date Newest", "Date Oldest"];
+    const isAZLabelPresent = chipData.some((chip) => chip.label === "A-Z");
     const isZALabelPresent = chipData.some((chip) => chip.label === "Z-A");
-    const isDateLabelPresent = chipData.some(
+    const isDateNewestLabelPresent = chipData.some(
       (chip) => chip.label === "Date Newest"
     );
+    const isDateOldLabelPresent = chipData.some(
+      (chip) => chip.label === "Date Oldest"
+    );
+    let sortedResults = finalResult.slice();
+    console.log(
+      "--->Sorting Labels present?:",
+      labelsToCheck.some((label) =>
+        chipData.some((chip) => chip.label === label)
+      )
+    );
+    console.log("chipData--->", chipData);
+    console.log("isAZLabelPresent--->", isAZLabelPresent);
 
     if (
       labelsToCheck.some((label) =>
@@ -124,36 +139,32 @@ const FusySearch = () => {
         const sortedFinalResultAscending = finalResult
           .slice()
           .sort((a, b) => b.title.localeCompare(a.title));
-        console.log("a-z============> \n\n", sortedFinalResultAscending);
         setFinalResult(sortedFinalResultAscending);
-      } else {
+        console.log("z-a============> \n\n", finalResult);
+      } else if (isAZLabelPresent) {
         const sortedFinalResultDescending = finalResult
           .slice()
           .sort((a, b) => a.title.localeCompare(b.title));
-        console.log("a-z============> \n\n", sortedFinalResultDescending);
         setFinalResult(sortedFinalResultDescending);
-      }
-
-      let sortedResults = finalResult.slice();
-
-      if (isDateLabelPresent) {
-        sortedResults = sortedResults.sort((a, b) => {
+        console.log("a-z============> \n\n", sortedFinalResultDescending);
+      } else if (isDateNewestLabelPresent) {
+        const sortedNewResults = sortedResults.sort((a, b) => {
           const dateA = new Date(a.updated).getTime();
           const dateB = new Date(b.updated).getTime();
           return dateB - dateA;
         });
-      } else {
-        sortedResults = sortedResults.sort((a, b) => {
+        setFinalResult(sortedNewResults);
+      } else if (isDateOldLabelPresent) {
+        const sortedOldResults = sortedResults.sort((a, b) => {
           const dateA = new Date(a.updated).getTime();
           const dateB = new Date(b.updated).getTime();
           return dateA - dateB;
         });
+        setFinalResult(sortedOldResults);
       }
-
-      setFinalResult(sortedResults);
     }
   }, [chipData]);
-
+  // <=========== Output ===========>
   return (
     <div>
       <SearchResultCards props={finalResult} />

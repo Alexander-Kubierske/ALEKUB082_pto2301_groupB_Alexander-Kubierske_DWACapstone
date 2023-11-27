@@ -9,3 +9,4 @@ export { default as LoginForm } from './LoginForm';
 export { default as PlayerBar } from './PlayerBar';
 export { default as FusySearch } from './SearchResults'
 export { default as ConfirmResetProgress } from './ConfirmResetProgress'
+export {default as FavoritesDialog } from './FavoritesDialog'

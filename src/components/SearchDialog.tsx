@@ -107,6 +107,11 @@ const CheckboxList = () => {
     setIsOldestChecked(checked.includes(4));
   };
 
+  const shouldAZDisable = isZAChecked || isOldestChecked || isNewestChecked;
+  const shouldZADisable = isAZChecked || isOldestChecked || isNewestChecked;
+  const shouldNewDisable = isOldestChecked || isZAChecked || isAZChecked;
+  const shouldOldDisable = isNewestChecked || isZAChecked || isAZChecked;
+
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {options.map(({ label, value }) => (
@@ -126,10 +131,10 @@ const CheckboxList = () => {
                   "aria-labelledby": `checkbox-list-label-${value}`,
                 }}
                 disabled={
-                  (value === 0 && isZAChecked) ||
-                  (value === 1 && isAZChecked) ||
-                  (value === 2 && isOldestChecked) ||
-                  (value === 3 && isNewestChecked)
+                  (value === 0 && shouldAZDisable) ||
+                  (value === 1 && shouldZADisable) ||
+                  (value === 2 && shouldNewDisable) ||
+                  (value === 3 && shouldOldDisable)
                 }
               />
             </ListItemIcon>

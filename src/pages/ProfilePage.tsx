@@ -4,13 +4,15 @@ import { Typography, Divider, Button, Paper } from "@mui/material";
 import { useUserStore } from "../store/userStore";
 import CancelIcon from "@mui/icons-material/Cancel";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useNavigate } from "react-router-dom";
-import { ConfirmResetProgress } from "../components/1componentIndex";
+import {
+  ConfirmResetProgress,
+  FavoritesDialog,
+} from "../components/1componentIndex";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { user } = useUserStore();
+  const { user, setUserData } = useUserStore();
   const [userEmail, setUserEmail] = useState();
 
   const fetchUserEmail = useEffect(() => {
@@ -30,11 +32,11 @@ const ProfilePage = () => {
 
   // <=========== View Favorites Logic ===========>
 
+  //   we pass the favorite episodes array from here
+
   // <=========== SignOut Logic ===========>
 
   const handleSignOut = async () => {
-    const navigate = useNavigate();
-    const { setUserData } = useUserStore();
     const { error } = await supabase.auth.signOut();
     setUserData("");
     navigate("/login");
@@ -74,9 +76,7 @@ const ProfilePage = () => {
             padding: "0.5rem",
           }}
         >
-          <Button>
-            View Favorite Episodes <ArrowForwardIosIcon />
-          </Button>
+          <FavoritesDialog />
         </div>
         <div
           className="profile--footer"
