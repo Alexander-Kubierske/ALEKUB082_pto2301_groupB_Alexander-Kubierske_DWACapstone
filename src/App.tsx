@@ -6,7 +6,7 @@ import { usePodcastPreviewStore, useUserStore } from "./store/1storeIndex";
 
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
-  const { user, setUserData } = useUserStore();
+  const { user, userData, setUserData } = useUserStore();
 
   useEffect(() => {
     // fetching our Podcast Preview data at the highest level component
@@ -22,7 +22,6 @@ function App() {
           .from("userData")
           .select()
           .eq("user_id", user);
-        console.log(data);
         setUserData(data);
       }
     };

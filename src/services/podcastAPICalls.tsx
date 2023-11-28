@@ -48,13 +48,15 @@ const fetchPodcastPreview = async (): Promise<Podcast[]> => {
  * @throws {Error} An error if the fetch request fails.
  */
 const fetchPodcastShow = async (id: number): Promise<PodcastShow> => {
-  try {
-    const response = await fetch(`https://podcast-api.netlify.app/id/${id}`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching podcasts:", error);
-    throw error;
+  if (id !== 0) {
+    try {
+      const response = await fetch(`https://podcast-api.netlify.app/id/${id}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching podcasts:", error);
+      throw error;
+    }
   }
 };
 

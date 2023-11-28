@@ -1,6 +1,6 @@
 import { genres } from "../services/podcastAPICalls";
 import {
-  Carousel,
+  CarouselComponent,
   Navbar,
   PodcastDialog,
   PlayerBar,
@@ -17,13 +17,16 @@ const HomePage = () => {
   const buttonRender = "home";
 
   const CarouselGenres = genreArray.map(({ genreId, genreName }) => (
-    <Carousel key={genreId} genre={genreName} />
+    <div key={genreId}>
+      <h3>{genreName}</h3>
+      <CarouselComponent key={genreId} genre={genreName} />
+    </div>
   ));
 
   return (
     <div>
       <Navbar buttonRender={buttonRender} />
-      {CarouselGenres}
+      <div className="items-display">{CarouselGenres}</div>
       <PodcastDialog />
       <PlayerBar />
     </div>

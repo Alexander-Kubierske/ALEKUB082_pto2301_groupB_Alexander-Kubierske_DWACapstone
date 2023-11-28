@@ -10,6 +10,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Skeleton,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -25,7 +26,7 @@ const PodcastDialog = () => {
   const [podcastShow, setPodcastShow] = useState<PodcastShow | null>(null);
   const { visible, currentPodcastId, toggleVisible, setId } =
     usePodcastInfoStore();
-  const { data } = usePodcastPreviewStore();
+  const { data, loading: previewLoading } = usePodcastPreviewStore();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const currentPodcast = data.find(
@@ -76,16 +77,38 @@ const PodcastDialog = () => {
         aria-labelledby="responsive-dialog-title"
       >
         <div className="dialog__header" style={dialogHeaderStyles}>
-          <img
-            className="dialog__img"
-            src={currentPodcast?.image}
-            alt="Podcast Logo"
-            style={imageStyles}
-          ></img>
+          {previewLoading ? (
+            <Skeleton
+              variant="rectangular"
+              width={imageStyles.maxWidth}
+              height={140}
+              style={imageStyles}
+              animation="wave"
+              component="img"
+            />
+          ) : (
+            <img
+              className="dialog__img"
+              src={currentPodcast?.image}
+              alt="Podcast Logo"
+              style={imageStyles}
+            />
+          )}
+
           <div className="podcast__title__info">
-            <h1>{currentPodcast?.title}</h1>
-            <p>Seasons: {currentPodcast?.seasons}</p>
-            <p>Last Update: {currentPodcast?.updated}</p>
+            {previewLoading ? (
+              <>
+                <Skeleton width={100} height={20} animation="wave" />
+                <Skeleton width={80} height={16} animation="wave" />
+                <Skeleton width={120} height={16} animation="wave" />
+              </>
+            ) : (
+              <>
+                <h1>{currentPodcast?.title}</h1>
+                <p>Seasons: {currentPodcast?.seasons}</p>
+                <p>Last Update: {currentPodcast?.updated}</p>
+              </>
+            )}
           </div>
         </div>
 
@@ -100,13 +123,23 @@ const PodcastDialog = () => {
             </AccordionSummary>
 
             <AccordionDetails>
-              <Typography>{podcastShow?.description}</Typography>
+              {previewLoading ? (
+                <Skeleton width={300} height={20} animation="wave" />
+              ) : (
+                <Typography>{podcastShow?.description}</Typography>
+              )}
             </AccordionDetails>
           </Accordion>
-          {podcastShow ? (
-            <DialogTabs podcastShow={podcastShow} />
+
+          {previewLoading ? (
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={200}
+              animation="wave"
+            />
           ) : (
-            <p>Loading...</p>
+            <DialogTabs podcastShow={podcastShow} />
           )}
         </DialogContent>
 

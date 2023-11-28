@@ -8,9 +8,11 @@ import {
   DialogTitle,
   useMediaQuery,
   Typography,
+  Paper,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useUserStore, usePodcastPreviewStore } from "../store/1storeIndex";
 
 // <=========== FavoritesDialog Function ===========>
 
@@ -30,33 +32,40 @@ const FavoritesDialog = () => {
     setOpen(false);
   };
   // <=========== Item Mapping ===========>
-  //   const resultCardMap = itemsToRender.map((podcast: Podcast) => {
-  //     return (
-  //       <div
-  //         className="search--Result--Container"
-  //         onClick={() => handleClick(podcast.id)}
-  //       >
-  //         <div>
-  //           <img
-  //             src={podcast.image}
-  //             alt={podcast.title}
-  //             className="search--Result--Img"
-  //           />
-  //         </div>
-  //         <div className="search--Result--text">
-  //           <Typography variant="h5" component="div">
-  //             {podcast.title}
-  //           </Typography>
-  //           <Typography variant="body2" color="text.secondary">
-  //             {podcast.updated}
-  //           </Typography>
-  //           <Typography variant="body2" color="text.secondary">
-  //             {podcast.genres}
-  //           </Typography>
-  //         </div>
-  //       </div>
-  //     );
-  //   });
+  const FavoriteCard = () => {
+    const { userData } = useUserStore();
+    const { data } = usePodcastPreviewStore();
+    console.log(data);
+    const showMap = userData[0].favorite_eps.map((show) => {
+      const matchingItem = data.find((item) => item.title === show.podcastShow);
+      return (
+        <Paper key={matchingItem.id}>
+          <div style={{ display: "flex", padding: "2%" }}>
+            <img
+              src={matchingItem.image}
+              alt={`favorite podcast ${matchingItem.title}`}
+              style={{
+                maxWidth: "40%",
+                borderRadius: "8px",
+                paddingRight: "2%",
+              }}
+            />
+            <Typography>{show.podcastShow}</Typography>
+          </div>
+          {show.seasons.map((season) => (
+            <div>
+              <Divider />
+              <Typography sx={{ textAlign: "center" }}>
+                {season.title}
+              </Typography>
+              <Divider />
+            </div>
+          ))}
+        </Paper>
+      );
+    });
+    return <div>{showMap}</div>;
+  };
   // <=========== FavoritesDialog Return ===========>
   return (
     <React.Fragment>
@@ -71,7 +80,9 @@ const FavoritesDialog = () => {
       >
         <DialogTitle id="My favorites">{"My favorites"}</DialogTitle>
         <Divider />
-        <DialogContent></DialogContent>
+        <DialogContent>
+          <FavoriteCard />
+        </DialogContent>
         <Divider />
         <DialogActions>
           <Button onClick={handleClose} autoFocus>

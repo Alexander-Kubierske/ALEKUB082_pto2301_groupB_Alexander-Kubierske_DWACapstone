@@ -12,7 +12,7 @@ import {
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { user, setUserData } = useUserStore();
+  const { user, setUserData, setUser } = useUserStore();
   const [userEmail, setUserEmail] = useState();
 
   const fetchUserEmail = useEffect(() => {
@@ -38,6 +38,7 @@ const ProfilePage = () => {
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
+    setUser("");
     setUserData("");
     navigate("/login");
   };
