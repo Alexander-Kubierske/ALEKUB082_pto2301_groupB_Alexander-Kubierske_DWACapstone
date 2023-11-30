@@ -1,9 +1,21 @@
 import React from "react";
-import { Tabs, Tab, Box } from "@mui/material";
+import {
+  Tabs,
+  Tab,
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Button,
+} from "@mui/material";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import RecommendTwoToneIcon from "@mui/icons-material/RecommendTwoTone";
+import RecommendIcon from "@mui/icons-material/Recommend";
 
 import { Episode, PodcastShow, Season } from "../services/podcastInterfaces";
 import { usePlayerStore, useUserStore } from "../store/1storeIndex";
-import { EpisodeAccordion } from "./1componentIndex";
 
 interface DialogTabsProps {
   podcastShow: PodcastShow | null;
@@ -32,12 +44,103 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
     }
   };
 
-  const handleRemoveFavorite = (episodeItem) => {
-    removeFavoriteEpisode(podcastShow, season.title, episodeItem.title);
+  const handleRemoveFavorite = (
+    podcastShow: PodcastShow,
+    season: Season,
+    episodeItem: Episode
+  ) => {
+    removeFavoriteEpisode(podcastShow, season?.title, episodeItem.title);
   };
 
-  const handleAddFavorite = (episodeItem) => {
-    addFavoriteEpisode(podcastShow, season.title, episodeItem.title);
+  const handleAddFavorite = (
+    podcastShow: PodcastShow,
+    season: Season,
+    episodeItem: Episode
+  ) => {
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.toLocaleString("default", { month: "long" }); // Get month name
+    const year = currentDate.getFullYear();
+    const hour = currentDate.getHours();
+    const minute = currentDate.getMinutes();
+    const dateEpFavorited = `${day} ${month} ${year} ${hour}:${minute}`;
+
+    const newFavEpisodeObject = {
+      title: episodeItem.title,
+      dateAdded: dateEpFavorited,
+    };
+    addFavoriteEpisode(podcastShow, season.title, newFavEpisodeObject);
+  };
+
+  const renderEpisodeAccordions = (season: Season) => {
+    const reversedEpisodes = [...season.episodes].reverse();
+
+    const foundShow = userData.find((show) =>
+      show.favorite_eps?.some((fav) => fav.podcastShow === podcastShow?.title)
+    );
+
+    const favoriteEpisodes =
+      foundShow?.favorite_eps
+        .find((showCheck) => showCheck.podcastShow === podcastShow.title)
+        ?.seasons.find((seasonCheck) => seasonCheck.title === season.title)
+        ?.episodes || [];
+
+    return reversedEpisodes.map((episodeItem) => {
+      const isFavorite = favoriteEpisodes.some(
+        (favoriteEp) => favoriteEp.title === episodeItem.title
+      );
+      return (
+        <Accordion key={episodeItem.episode}>
+          <AccordionSummary
+            expandIcon={
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlay(episodeItem);
+                }}
+              >
+                {currentEpisode === episodeItem ? (
+                  isPlaying ? (
+                    <PauseCircleIcon />
+                  ) : (
+                    <PlayCircleIcon />
+                  )
+                ) : (
+                  <PlayCircleIcon />
+                )}
+              </Button>
+            }
+          >
+            <Typography>{`${episodeItem.title}`}</Typography>
+            <Button>
+              {isFavorite ? (
+                <RecommendTwoToneIcon
+                  onClick={() =>
+                    handleRemoveFavorite(podcastShow, season, episodeItem)
+                  }
+                />
+              ) : (
+                <RecommendIcon
+                  onClick={() =>
+                    handleAddFavorite(podcastShow, season, episodeItem)
+                  }
+                />
+              )}
+            </Button>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              {episodeItem.description ? (
+                <>{`Description: ${episodeItem.description}`}</>
+              ) : (
+                <br />
+              )}
+              {!episodeItem.description && "No description"}
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      );
+    });
   };
 
   const renderSeasonTabs = () => {
@@ -74,16 +177,7 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
           />
         </div>
         {seasonsTabValue === season.season && (
-          <div>
-            {EpisodeAccordion(
-              season,
-              isPlaying,
-              handlePlay,
-              handleRemoveFavorite,
-              handleAddFavorite,
-              addFavoriteEpisode
-            )}
-          </div>
+          <div>{renderEpisodeAccordions(season)}</div>
         )}
       </Box>
     ));

@@ -1,6 +1,11 @@
 import React from "react";
 import { Tabs, Tab, Typography, Box, Paper } from "@mui/material";
-import { LoginForm, SignUpForm, Navbar } from "../components/1componentIndex.ts";
+import {
+  LoginForm,
+  SignUpForm,
+  Navbar,
+} from "../components/1componentIndex.ts";
+import { useUserStore } from "../store/1storeIndex.ts";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,15 +47,17 @@ function a11yProps(index: number) {
 // <=========== Final login page render ===========>
 
 const LoginPage = () => {
+  const { userData } = useUserStore();
   const [value, setValue] = React.useState(0);
-  const buttonRender = 'login';
+  const buttonRender = "login";
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   return (
-    <div> 
-      <Navbar buttonRender={buttonRender}/>
+    <div>
+      <Navbar buttonRender={buttonRender} />
       <Paper className="login--container">
         <div className="login--form">
           <Box sx={{ width: "100%" }}>

@@ -30,10 +30,6 @@ const ProfilePage = () => {
     navigate("/");
   };
 
-  // <=========== View Favorites Logic ===========>
-
-  //   we pass the favorite episodes array from here
-
   // <=========== SignOut Logic ===========>
 
   const handleSignOut = async () => {
@@ -41,7 +37,13 @@ const ProfilePage = () => {
     setUser("");
     setUserData("");
     navigate("/login");
+    sessionStorage.clear();
   };
+
+  /**
+   * if true user is logged in
+   */
+  const isLoggedIn = user !== "" && user !== "check";
 
   return (
     <Paper
@@ -55,45 +57,56 @@ const ProfilePage = () => {
         },
       }}
     >
-      <div
-        className="profile--container"
-        style={{ display: "flex", flexDirection: "column" }}
-      >
+      {isLoggedIn ? (
         <div
-          className="profile--header"
-          style={{
-            padding: "0.5rem",
-          }}
+          className="profile--container"
+          style={{ display: "flex", flexDirection: "column" }}
         >
-          <Button onClick={handleNavigateBack}>
-            <CancelIcon fontSize="large" sx={{ color: "#1976d2" }} />
-          </Button>
-          <Typography sx={{ paddingTop: "3%" }}>{userEmail}</Typography>
-          <Divider />
+          <div
+            className="profile--header"
+            style={{
+              padding: "0.5rem",
+            }}
+          >
+            <Button onClick={handleNavigateBack}>
+              <CancelIcon fontSize="large" sx={{ color: "#1976d2" }} />
+            </Button>
+            <Typography sx={{ paddingTop: "3%" }}>{userEmail}</Typography>
+            <Divider />
+          </div>
+          <div
+            className="profile--content"
+            style={{
+              padding: "0.5rem",
+            }}
+          >
+            <FavoritesDialog />
+          </div>
+          <div
+            className="profile--footer"
+            style={{
+              padding: "0.5rem",
+            }}
+          >
+            <Divider />
+            <ConfirmResetProgress />
+            <Divider />
+            <Button onClick={handleSignOut}>
+              <Typography sx={{ color: "#1976d2" }}>Sign Out</Typography>{" "}
+              <LogoutIcon sx={{ paddingLeft: "3%", color: "#FF000C" }} />
+            </Button>
+          </div>
         </div>
-        <div
-          className="profile--content"
-          style={{
-            padding: "0.5rem",
-          }}
-        >
-          <FavoritesDialog />
+      ) : (
+        <div>
+          <Typography>
+            {
+              "You are not logged in. \n To view your profile please click the button bellow:"
+            }
+          </Typography>
+          <Button>Sign In</Button>
         </div>
-        <div
-          className="profile--footer"
-          style={{
-            padding: "0.5rem",
-          }}
-        >
-          <Divider />
-          <ConfirmResetProgress />
-          <Divider />
-          <Button onClick={handleSignOut}>
-            <Typography sx={{ color: "#1976d2" }}>Sign Out</Typography>{" "}
-            <LogoutIcon sx={{ paddingLeft: "3%", color: "#FF000C" }} />
-          </Button>
-        </div>
-      </div>
+      )}
     </Paper>
   );
 };

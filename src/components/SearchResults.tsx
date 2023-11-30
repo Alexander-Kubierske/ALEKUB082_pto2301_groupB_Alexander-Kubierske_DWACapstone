@@ -121,14 +121,6 @@ const FusySearch = () => {
       (chip) => chip.label === "Date Oldest"
     );
     let sortedResults = finalResult.slice();
-    console.log(
-      "--->Sorting Labels present?:",
-      labelsToCheck.some((label) =>
-        chipData.some((chip) => chip.label === label)
-      )
-    );
-    console.log("chipData--->", chipData);
-    console.log("isAZLabelPresent--->", isAZLabelPresent);
 
     if (
       labelsToCheck.some((label) =>
@@ -140,13 +132,11 @@ const FusySearch = () => {
           .slice()
           .sort((a, b) => b.title.localeCompare(a.title));
         setFinalResult(sortedFinalResultAscending);
-        console.log("z-a============> \n\n", finalResult);
       } else if (isAZLabelPresent) {
         const sortedFinalResultDescending = finalResult
           .slice()
           .sort((a, b) => a.title.localeCompare(b.title));
         setFinalResult(sortedFinalResultDescending);
-        console.log("a-z============> \n\n", sortedFinalResultDescending);
       } else if (isDateNewestLabelPresent) {
         const sortedNewResults = sortedResults.sort((a, b) => {
           const dateA = new Date(a.updated).getTime();

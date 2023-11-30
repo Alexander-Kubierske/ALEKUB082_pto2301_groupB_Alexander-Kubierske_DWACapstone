@@ -49,6 +49,7 @@ const PodcastDialog = () => {
   }, [currentPodcastId]);
 
   const handleClose = () => {
+    setPodcastShow(null);
     toggleVisible();
     setId(0);
   };

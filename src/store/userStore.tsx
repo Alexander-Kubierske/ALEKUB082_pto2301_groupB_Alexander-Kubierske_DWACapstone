@@ -16,6 +16,7 @@ interface UserDataInterface {
 //         {
 //           title: "Season 1",
 //           episodes: ['Ep 4 The Poop Show', 'Ep 5 Plague Part 1: The GMOAT']
+//           episodes: [ {title:'Ep 4 The Poop Show', date:"30 november 2023 17:00" }]
 //         }
 //       ]
 //     }
@@ -26,14 +27,15 @@ interface UserDataInterface {
 // };
 
 interface UserStore {
-  user: "" | "check" | string;
+  user: null | "check" | string;
   userData: "" | UserDataInterface[];
+  prevUserData: "" | UserDataInterface[];
   setUser: (newUser: string) => void;
   setUserData: (newUserData: UserDataInterface[]) => void;
   addFavoriteEpisode: (
     podcastShow: PodcastShow,
     seasonTitle: string,
-    newEpisode: string
+    newEpisode: {}
   ) => void;
   removeFavoriteEpisode: (
     podcastShow: PodcastShow,
@@ -45,8 +47,13 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set) => ({
   user: "",
   userData: "",
+  prevUserData: "",
   setUser: (newUser) => set({ user: newUser }),
-  setUserData: (newUserData) => set({ userData: newUserData }),
+  setUserData: (newUserData) =>
+    set((state) => ({
+      prevUserData: state.userData,
+      userData: newUserData,
+    })),
 
   addFavoriteEpisode: (podcastShow, seasonTitle, newEpisode) =>
     set((state) => ({

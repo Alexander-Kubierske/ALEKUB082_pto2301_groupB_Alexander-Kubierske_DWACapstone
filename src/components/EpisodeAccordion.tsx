@@ -11,6 +11,7 @@ import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import RecommendTwoToneIcon from "@mui/icons-material/RecommendTwoTone";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import { Episode } from "../services/podcastInterfaces";
+import { useUserStore } from "../store/1storeIndex";
 
 interface EpisodeAccordionProps {
   episode: Episode;
@@ -31,7 +32,11 @@ const EpisodeAccordion: React.FC<EpisodeAccordionProps> = ({
   handleAddFavorite,
   favoriteEpisodes,
 }) => {
-  console.log(episode);
+  const { user } = useUserStore();
+  /**
+   * if true user is logged in
+   */
+  const isLoggedIn = user !== "" && user !== "check";
   return (
     <Accordion key={episode.episode}>
       <AccordionSummary
@@ -55,15 +60,19 @@ const EpisodeAccordion: React.FC<EpisodeAccordionProps> = ({
         }
       >
         <Typography>{episode.title}</Typography>
-        <Button>
-          {favoriteEpisodes.includes(episode.title) ? (
-            <RecommendTwoToneIcon
-              onClick={() => handleRemoveFavorite(episode)}
-            />
-          ) : (
-            <RecommendIcon onClick={() => handleAddFavorite(episode)} />
-          )}
-        </Button>
+        {isLoggedIn ? (
+          <Button>
+            {favoriteEpisodes.includes(episode.title) ? (
+              <RecommendTwoToneIcon
+                onClick={() => handleRemoveFavorite(episode)}
+              />
+            ) : (
+              <RecommendIcon onClick={() => handleAddFavorite(episode)} />
+            )}
+          </Button>
+        ) : (
+          <div></div>
+        )}
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
