@@ -25,7 +25,7 @@ interface DialogTabsProps {
 const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
   const { currentEpisode, isPlaying, playEpisode, pauseEpisode } =
     usePlayerStore();
-  const { userData, addFavoriteEpisode, removeFavoriteEpisode } =
+  const { user, userData, addFavoriteEpisode, removeFavoriteEpisode } =
     useUserStore();
 
   const [seasonsTabValue, setSeasonsTabValue] = React.useState(1);
@@ -92,11 +92,18 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
       seasons: SeasonFromUser[];
     }
 
-    const foundShow = (userData as any).find((show: UserDataItemInterface) =>
-      show.favorite_eps?.some(
-        (fav: Fav) => fav.podcastShow === podcastShow?.title
-      )
-    );
+    /**
+     * if true user is logged in
+     */
+    const isLoggedIn = user !== "" && user !== "check";
+
+    const foundShow = isLoggedIn
+      ? (userData as any).find((show: UserDataItemInterface) =>
+          show.favorite_eps?.some(
+            (fav: Fav) => fav.podcastShow === podcastShow?.title
+          )
+        )
+      : [];
 
     const favoriteEpisodes =
       (foundShow?.favorite_eps || []) //userData
@@ -133,18 +140,22 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
           >
             <Typography>{`${episodeItem.title}`}</Typography>
             <Button>
-              {isFavorite ? (
-                <RecommendTwoToneIcon
-                  onClick={() =>
-                    handleRemoveFavorite(podcastShow!, season, episodeItem)
-                  }
-                />
+              {isLoggedIn ? (
+                isFavorite ? (
+                  <RecommendTwoToneIcon
+                    onClick={() =>
+                      handleRemoveFavorite(podcastShow!, season, episodeItem)
+                    }
+                  />
+                ) : (
+                  <RecommendIcon
+                    onClick={() =>
+                      handleAddFavorite(podcastShow!, season, episodeItem)
+                    }
+                  />
+                )
               ) : (
-                <RecommendIcon
-                  onClick={() =>
-                    handleAddFavorite(podcastShow!, season, episodeItem)
-                  }
-                />
+                <div></div>
               )}
             </Button>
           </AccordionSummary>
