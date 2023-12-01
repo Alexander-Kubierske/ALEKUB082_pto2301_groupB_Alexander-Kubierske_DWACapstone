@@ -113,8 +113,6 @@ function App() {
   //   updateSupabaseData();
   // }, [userData]);
 
-  console.log(userData);
-
   return (
     <>
       <AppRouter />
