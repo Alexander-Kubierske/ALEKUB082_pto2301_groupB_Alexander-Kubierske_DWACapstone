@@ -2,18 +2,13 @@ import { useEffect, useRef } from "react";
 import { AppBar } from "@mui/material";
 import { usePlayerStore } from "../store/playerStore";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
+import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-
-interface AudioPlayerRef {
-  audio: {
-    current: HTMLElement | null;
-  };
-}
 
 const PlayerBar = () => {
   const { currentEpisode, isPlaying, playEpisode, pauseEpisode } =
     usePlayerStore();
-  const audioPlayerRef = useRef<AudioPlayerRef | null>(null);
+  const audioPlayerRef = useRef<H5AudioPlayer>(null);
 
   const controlPlayPause = () => {
     if (isPlaying) {

@@ -38,7 +38,7 @@ export const useSearchParamStore = create<SearchParamStore>((set) => ({
    * @param {number[]} newChecked - The new array to set as the checked state.
    * @returns {void}
    */
-  setChecked: (newChecked) => set((state) => ({ checked: newChecked })),
+  setChecked: (newChecked) => set(() => ({ checked: newChecked })),
 
   /**
    * Updates the `chipData` state array.
@@ -49,5 +49,5 @@ export const useSearchParamStore = create<SearchParamStore>((set) => ({
    * @param {ChipDataInterface[]} newChipData - The new array to set as the chips to be rendered.
    * @returns {void}
    */
-  setChipData: (newChipData) => set((state) => ({ chipData: newChipData })),
+  setChipData: (newChipData) => set(() => ({ chipData: newChipData })),
 }));

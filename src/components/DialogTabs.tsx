@@ -31,7 +31,7 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
   const [seasonsTabValue, setSeasonsTabValue] = React.useState(1);
 
   const handleSeasonsTabChange = (
-    event: React.ChangeEvent<{}>,
+    _: React.ChangeEvent<{}>,
     newValue: number
   ) => {
     setSeasonsTabValue(newValue);

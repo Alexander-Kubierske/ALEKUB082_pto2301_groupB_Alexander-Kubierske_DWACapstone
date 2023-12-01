@@ -49,7 +49,7 @@ const LoginPage = () => {
   const [value, setValue] = React.useState(0);
   const buttonRender = "login";
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

@@ -1,4 +1,4 @@
-import { Podcast, PodcastShow } from "./podcastInterfaces";
+import { Podcast } from "./podcastInterfaces";
 
 export const genres: Record<number, string> = {
   1: "Personal Growth",
