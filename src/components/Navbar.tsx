@@ -68,7 +68,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
       <LogoContainer onClick={handleButtonClick}>
         <Link to="/">
           <img
-            src="https://media.4-paws.org/b/8/d/5/b8d5441fec6b84e9c3cba899549b84bb0f193fff/VIER%20PFOTEN_2019-07-18_013-2890x2000.jpg"
+            src="https://raw.githubusercontent.com/Alexander-Kubierske/ALEKUB082_pto2301_groupB_Alexander-Kubierske_DWACapstone/master/src/images/logo.jpg"
             alt="Logo"
             className="logo--button"
           />
