@@ -7,14 +7,27 @@ const ConfirmResetProgress = () => {
   const { user } = useUserStore();
   const [showModal, setShowModal] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const clearFavorites = async () => {
-      const { error } = await supabase
-        .from("userData")
-        .update({ progress: null })
-        .eq("user_id", user);
+      try {
+        const { error } = await supabase
+          .from("userData")
+          .update({ progress: null })
+          .eq("user_id", user);
+
+        if (error) {
+          console.error("Error clearing favorites:", error.message);
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Unexpected error:", error.message);
+        } else {
+          console.error("Unexpected error:", error);
+        }
+      }
     };
-    clearFavorites();
+
+    await clearFavorites();
     setShowModal(false);
   };
 

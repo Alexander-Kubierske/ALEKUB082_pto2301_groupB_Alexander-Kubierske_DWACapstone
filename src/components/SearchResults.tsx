@@ -99,7 +99,7 @@ const FusySearch = () => {
         .map((result) => result.item);
     }
 
-    setFinalResult((prevResult: Podcast[]) => {
+    setFinalResult(() => {
       if (genreResults.length > 0) {
         return [...genreResults];
       } else {

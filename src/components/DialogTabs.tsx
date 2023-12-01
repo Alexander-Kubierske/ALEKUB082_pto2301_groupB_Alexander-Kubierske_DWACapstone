@@ -16,6 +16,7 @@ import RecommendIcon from "@mui/icons-material/Recommend";
 
 import { Episode, PodcastShow, Season } from "../services/podcastInterfaces";
 import { usePlayerStore, useUserStore } from "../store/1storeIndex";
+import { UserDataItemInterface } from "../store/userStore";
 
 interface DialogTabsProps {
   podcastShow: PodcastShow | null;
@@ -49,6 +50,7 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
     season: Season,
     episodeItem: Episode
   ) => {
+    console.log(episodeItem);
     removeFavoriteEpisode(podcastShow, season?.title, episodeItem.title);
   };
 
@@ -75,20 +77,38 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
   const renderEpisodeAccordions = (season: Season) => {
     const reversedEpisodes = [...season.episodes].reverse();
 
-    const foundShow = userData.find((show) =>
-      show.favorite_eps?.some((fav) => fav.podcastShow === podcastShow?.title)
+    interface EpisodeFromUser {
+      title: string;
+      date: string;
+    }
+
+    interface SeasonFromUser {
+      title: string;
+      episodes: EpisodeFromUser;
+    }
+
+    interface Fav {
+      podcastShow: string;
+      seasons: SeasonFromUser[];
+    }
+
+    const foundShow = (userData as any).find((show: UserDataItemInterface) =>
+      show.favorite_eps?.some(
+        (fav: Fav) => fav.podcastShow === podcastShow?.title
+      )
     );
 
     const favoriteEpisodes =
-      foundShow?.favorite_eps
-        .find((showCheck) => showCheck.podcastShow === podcastShow.title)
-        ?.seasons.find((seasonCheck) => seasonCheck.title === season.title)
-        ?.episodes || [];
+      (foundShow?.favorite_eps || []) //userData
+        .map((showCheck: Fav) => showCheck as Fav)
+        .find((fav: Fav) => fav?.podcastShow === podcastShow?.title)
+        ?.seasons?.find((seasonCheck: Fav) => seasonCheck)?.episodes || [];
 
     return reversedEpisodes.map((episodeItem) => {
-      const isFavorite = favoriteEpisodes.some(
-        (favoriteEp) => favoriteEp.title === episodeItem.title
+      const isFavorite = (favoriteEpisodes as EpisodeFromUser[]).some(
+        (favoriteEp: EpisodeFromUser) => favoriteEp.title === episodeItem.title
       );
+
       return (
         <Accordion key={episodeItem.episode}>
           <AccordionSummary
@@ -116,13 +136,13 @@ const DialogTabs: React.FC<DialogTabsProps> = ({ podcastShow }) => {
               {isFavorite ? (
                 <RecommendTwoToneIcon
                   onClick={() =>
-                    handleRemoveFavorite(podcastShow, season, episodeItem)
+                    handleRemoveFavorite(podcastShow!, season, episodeItem)
                   }
                 />
               ) : (
                 <RecommendIcon
                   onClick={() =>
-                    handleAddFavorite(podcastShow, season, episodeItem)
+                    handleAddFavorite(podcastShow!, season, episodeItem)
                   }
                 />
               )}

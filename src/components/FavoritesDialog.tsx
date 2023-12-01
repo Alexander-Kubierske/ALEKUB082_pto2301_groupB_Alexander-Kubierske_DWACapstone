@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import {
   Divider,
   Button,
@@ -19,6 +19,21 @@ import FormControl from "@mui/material/FormControl";
 import { useUserStore, usePodcastPreviewStore } from "../store/1storeIndex";
 import { FavoriteEpisodeAccordions } from "./1componentIndex";
 
+interface EpisodeFromUser {
+  title: string;
+  date: string;
+}
+
+interface SeasonFromUser {
+  title: string;
+  episodes: EpisodeFromUser[];
+}
+
+interface FavoriteEpisodeShow {
+  seasons: SeasonFromUser[];
+  podcastShow: string;
+}
+
 // <=========== FavoritesDialog Function ===========>
 
 const FavoritesDialog = () => {
@@ -37,45 +52,48 @@ const FavoritesDialog = () => {
     setOpen(false);
   };
   // <=========== Filter Setting ===========>
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSortingOption(event.target.value);
   };
 
   // <=========== Item Mapping ===========>
-  const FavoriteCardComponent = (sortingOption) => {
+
+  const FavoriteCardComponent = (sortBy: any) => {
     const { userData } = useUserStore();
+    const userDataArray = userData[0] as any; //<====== TS is too dumb to identify we have drilled down to the UserDataItemInterface item
     const { data } = usePodcastPreviewStore();
     const [cardsToRender, setCardsToRender] = useState(
-      userData[0].favorite_eps
+      userDataArray?.favorite_eps
     );
 
     useEffect(() => {
-      const currentSortingOption = sortingOption.sortingOption;
+      const currentSortingOption = sortBy.sortingOption;
 
       if (currentSortingOption === "Z-A") {
         const sortedFinalResultAscending = cardsToRender
           .slice()
-          .sort((a, b) => b.podcastShow.localeCompare(a.podcastShow));
+          .sort((a: any, b: any) => b.podcastShow.localeCompare(a.podcastShow));
 
         setCardsToRender(sortedFinalResultAscending);
       } else if (currentSortingOption === "A-Z") {
         const sortedFinalResultDescending = cardsToRender
           .slice()
-          .sort((a, b) => a.podcastShow.localeCompare(b.podcastShow));
+          .sort((a: any, b: any) => a.podcastShow.localeCompare(b.podcastShow));
 
         setCardsToRender(sortedFinalResultDescending);
       }
     }, [sortingOption]);
 
-    const showMap = cardsToRender.map((show) => {
+    const showMap = cardsToRender.map((show: FavoriteEpisodeShow) => {
       const matchingItem = data.find((item) => item.title === show.podcastShow);
+      console.log("show", show);
       return (
-        <div key={matchingItem.id}>
+        <div key={matchingItem!.id}>
           <Paper>
             <div style={{ display: "flex", padding: "2%" }}>
               <img
-                src={matchingItem.image}
-                alt={`favorite podcast ${matchingItem.title}`}
+                src={matchingItem!.image}
+                alt={`favorite podcast ${matchingItem!.title}`}
                 style={{
                   maxWidth: "40%",
                   borderRadius: "8px",
@@ -93,7 +111,7 @@ const FavoritesDialog = () => {
                 <Divider />
                 <FavoriteEpisodeAccordions
                   season={season}
-                  podcastShowId={matchingItem.id}
+                  podcastShowId={matchingItem!.id}
                 />
               </div>
             ))}

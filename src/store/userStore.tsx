@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import { PodcastShow } from "../services/podcastInterfaces";
 
-interface UserDataInterface {
+export interface UserDataInterface {
+  [index: number]: UserDataItemInterface;
+}
+
+export interface UserDataItemInterface {
   user_id: string; // UUID
   favorite_eps: null | [];
   subscribed: null | [];
@@ -26,12 +30,22 @@ interface UserDataInterface {
 //   subscribed: null
 // };
 
+interface EpisodeFromUser {
+  title: string;
+  date: string;
+}
+
+interface SeasonFromUser {
+  title: string;
+  episodes: EpisodeFromUser[];
+}
+
 interface UserStore {
   user: null | "check" | string;
   userData: "" | UserDataInterface[];
   prevUserData: "" | UserDataInterface[];
   setUser: (newUser: string) => void;
-  setUserData: (newUserData: UserDataInterface[]) => void;
+  setUserData: (newUserData: UserDataInterface[] | "") => void;
   addFavoriteEpisode: (
     podcastShow: PodcastShow,
     seasonTitle: string,
@@ -57,7 +71,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
   addFavoriteEpisode: (podcastShow, seasonTitle, newEpisode) =>
     set((state) => ({
-      userData: state.userData.map((user) => {
+      userData: (state.userData as UserDataInterface[]).map((user: any) => {
         let updatedFavoriteEps = [...user.favorite_eps];
 
         // Check if the podcastShow already exists based on the title
@@ -70,16 +84,25 @@ export const useUserStore = create<UserStore>((set) => ({
           const existingShow = updatedFavoriteEps[existingShowIndex];
 
           // Initialize updatedSeasons
-          let updatedSeasons = existingShow.seasons.map((season) => {
-            if (season.title === seasonTitle) {
-              // Season exists, add the new episode
-              return { ...season, episodes: [...season.episodes, newEpisode] };
+          let updatedSeasons = existingShow.seasons.map(
+            (season: SeasonFromUser) => {
+              if (season.title === seasonTitle) {
+                // Season exists, add the new episode
+                return {
+                  ...season,
+                  episodes: [...season.episodes, newEpisode],
+                };
+              }
+              return season;
             }
-            return season;
-          });
+          );
 
           // If the specified season doesn't exist, create a new season
-          if (!existingShow.seasons.some((s) => s.title === seasonTitle)) {
+          if (
+            !existingShow.seasons.some(
+              (s: SeasonFromUser) => s.title === seasonTitle
+            )
+          ) {
             updatedSeasons.push({
               title: seasonTitle,
               episodes: [newEpisode],
@@ -113,7 +136,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
   removeFavoriteEpisode: (podcastShow, seasonTitle, episodeToRemove) => {
     set((state) => ({
-      userData: state.userData.map((user) => {
+      userData: (state.userData as UserDataInterface[]).map((user: any) => {
         let updatedFavoriteEps = [...user.favorite_eps];
 
         const existingShowIndex = updatedFavoriteEps.findIndex(
@@ -124,7 +147,7 @@ export const useUserStore = create<UserStore>((set) => ({
           const existingShow = updatedFavoriteEps[existingShowIndex];
 
           const existingSeasonIndex = existingShow.seasons.findIndex(
-            (season) => season.title === seasonTitle
+            (season: SeasonFromUser) => season.title === seasonTitle
           );
 
           if (existingSeasonIndex !== -1) {
@@ -132,7 +155,7 @@ export const useUserStore = create<UserStore>((set) => ({
 
             // Filter out the episode to be removed by comparing strings
             const updatedEpisodes = existingSeason.episodes.filter(
-              (episode) => episode !== episodeToRemove
+              (episode: EpisodeFromUser) => episode.title !== episodeToRemove
             );
 
             if (updatedEpisodes.length > 0) {

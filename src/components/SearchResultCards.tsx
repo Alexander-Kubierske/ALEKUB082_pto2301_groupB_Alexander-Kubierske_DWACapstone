@@ -11,7 +11,7 @@ const SearchResultCards = (props: Props) => {
 
   const itemsToRender = props.props;
 
-  const handleClick = (id) => {
+  const handleClick = (id: Podcast["id"]) => {
     toggleVisible();
     setId(id);
   };

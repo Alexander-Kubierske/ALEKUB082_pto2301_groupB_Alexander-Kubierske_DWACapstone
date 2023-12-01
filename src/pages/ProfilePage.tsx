@@ -13,9 +13,9 @@ import {
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, setUserData, setUser } = useUserStore();
-  const [userEmail, setUserEmail] = useState();
+  const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
 
-  const fetchUserEmail = useEffect(() => {
+  useEffect(() => {
     const getUserEmail = async () => {
       await supabase.auth.getUser().then((value) => {
         setUserEmail(value.data?.user?.email);
@@ -38,6 +38,9 @@ const ProfilePage = () => {
     setUserData("");
     navigate("/login");
     sessionStorage.clear();
+    if (error) {
+      console.error("Sign-out error:", error.message);
+    }
   };
 
   /**
@@ -45,6 +48,9 @@ const ProfilePage = () => {
    */
   const isLoggedIn = user !== "" && user !== "check";
 
+  const handleSignIn = () => {
+    navigate("/login");
+  };
   return (
     <Paper
       sx={{
@@ -101,10 +107,10 @@ const ProfilePage = () => {
         <div>
           <Typography>
             {
-              "You are not logged in. \n To view your profile please click the button bellow:"
+              "You are not logged in. \n To view your profile please click the button below:"
             }
           </Typography>
-          <Button>Sign In</Button>
+          <Button onClick={handleSignIn}>Sign In</Button>
         </div>
       )}
     </Paper>

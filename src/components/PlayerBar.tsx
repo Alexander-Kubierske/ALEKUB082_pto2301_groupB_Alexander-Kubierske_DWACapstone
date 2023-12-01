@@ -4,45 +4,52 @@ import { usePlayerStore } from "../store/playerStore";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 
+interface AudioPlayerRef {
+  audio: {
+    current: HTMLElement | null;
+  };
+}
+
 const PlayerBar = () => {
-  const {
-    currentEpisode,
-    isPlaying,
-    playEpisode,
-    pauseEpisode,
-    setCurrentTime,
-  } = usePlayerStore();
-  const audioPlayerRef = useRef(null);
+  const { currentEpisode, isPlaying, playEpisode, pauseEpisode } =
+    usePlayerStore();
+  const audioPlayerRef = useRef<AudioPlayerRef | null>(null);
 
   const controlPlayPause = () => {
     if (isPlaying) {
       pauseEpisode();
     } else {
-      playEpisode(currentEpisode);
+      playEpisode(currentEpisode!);
     }
   };
 
   useEffect(() => {
-    // Access the play button and attach the custom click event
-    const playButton = audioPlayerRef.current.audio.current.querySelector(
-      ".rhap_play-pause-button"
-    );
-    if (playButton) {
-      playButton.addEventListener("click", controlPlayPause);
+    const audioPlayer = audioPlayerRef.current;
+
+    // Ensure that audioPlayer is not null before proceeding
+    if (audioPlayer) {
+      const playButton = audioPlayer.audio.current?.querySelector(
+        ".rhap_play-pause-button"
+      );
+
+      if (playButton) {
+        playButton.addEventListener("click", controlPlayPause);
+      }
+
+      return () => {
+        if (playButton) {
+          playButton.removeEventListener("click", controlPlayPause);
+        }
+      };
     }
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      if (playButton) {
-        playButton.removeEventListener("click", controlPlayPause);
-      }
-    };
+    return undefined;
   }, [isPlaying]);
 
   useEffect(() => {
-    // Access the AudioPlayer component and control playback based on isPlaying state
     const audioPlayer = audioPlayerRef.current;
-    if (audioPlayer) {
+
+    if (audioPlayer && audioPlayer.audio.current instanceof HTMLAudioElement) {
       if (isPlaying) {
         audioPlayer.audio.current.play();
       } else {

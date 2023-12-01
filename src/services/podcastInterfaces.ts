@@ -92,6 +92,7 @@ export interface Episode {
   description?: string;
   episode: number;
   file: string;
+  date?: string | null;
 }
   
 // 0

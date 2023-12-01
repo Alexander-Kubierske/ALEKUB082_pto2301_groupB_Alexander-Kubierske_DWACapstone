@@ -10,9 +10,7 @@ import {
 import { Search, AccountCircle } from "@mui/icons-material";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import supabase from "../services/supaBaseConnector";
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../store/userStore";
 
 interface Props {
   children: React.ReactElement;

@@ -7,18 +7,11 @@ import {
   useUserStore,
   usePlayerStore,
 } from "./store/1storeIndex";
-import { json } from "react-router-dom";
 
 function App() {
   const { data, fetchData } = usePodcastPreviewStore();
-  const { user, userData, prevUserData, setUser, setUserData } = useUserStore();
-  const {
-    isPlaying,
-    currentEpisode,
-    currentTime,
-    setCurrentTime,
-    playEpisode,
-  } = usePlayerStore();
+  const { user, userData, setUser, setUserData } = useUserStore();
+  const { isPlaying, currentEpisode } = usePlayerStore();
 
   useEffect(() => {
     // fetching our Podcast Preview data at the highest level component
@@ -39,8 +32,8 @@ function App() {
         navigationEntries.length > 0 &&
         navigationEntries[0].type === "reload"
       ) {
-        setUser(sessionStorage.getItem("user"));
-        setUserData(JSON.parse(sessionStorage.getItem("userData")));
+        setUser(sessionStorage.getItem("user")!);
+        setUserData(JSON.parse(sessionStorage.getItem("userData")!));
       }
     }
   }, []);
@@ -55,10 +48,10 @@ function App() {
           .select()
           .eq("user_id", user);
 
-        sessionStorage.setItem("user", user);
+        sessionStorage.setItem("user", user!);
         sessionStorage.setItem("userData", JSON.stringify(data));
         const storedUserData = sessionStorage.getItem("userData");
-        setUserData(JSON.parse(storedUserData));
+        setUserData(JSON.parse(storedUserData!));
       }
     };
     getUserData();

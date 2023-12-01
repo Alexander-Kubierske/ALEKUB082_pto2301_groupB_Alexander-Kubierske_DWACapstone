@@ -21,7 +21,10 @@ export default function MediumCard({
   };
 
   return (
-    <Card sx={{ minWidth: "8.75rem", maxWidth: "8.75rem" }} className={id}>
+    <Card
+      sx={{ minWidth: "8.75rem", maxWidth: "8.75rem" }}
+      className={id.toString()}
+    >
       <CardActionArea onClick={handleClick}>
         {loading ? (
           <Skeleton variant="rectangular" width={210} height={140} />

@@ -1,11 +1,10 @@
 import React from "react";
-import { Tabs, Tab, Typography, Box, Paper } from "@mui/material";
+import { Tabs, Tab, Box, Paper } from "@mui/material";
 import {
   LoginForm,
   SignUpForm,
   Navbar,
 } from "../components/1componentIndex.ts";
-import { useUserStore } from "../store/1storeIndex.ts";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,7 +46,6 @@ function a11yProps(index: number) {
 // <=========== Final login page render ===========>
 
 const LoginPage = () => {
-  const { userData } = useUserStore();
   const [value, setValue] = React.useState(0);
   const buttonRender = "login";
 

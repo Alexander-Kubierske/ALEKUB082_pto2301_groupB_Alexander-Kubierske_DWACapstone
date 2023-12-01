@@ -10,13 +10,31 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import RecommendTwoToneIcon from "@mui/icons-material/RecommendTwoTone";
 import PodcastFetchRequests from "../services/podcastAPICalls";
-import { PodcastShow, Episode } from "../services/podcastInterfaces";
+import { PodcastShow, Episode, Season } from "../services/podcastInterfaces";
 import { usePlayerStore, useUserStore } from "../store/1storeIndex";
 
-const FavoriteEpisodeAccordions = ({ season, podcastShowId }) => {
+interface EpisodeFromUser {
+  title: string;
+  date: string;
+}
+
+interface SeasonFromUser {
+  title: string;
+  episodes: EpisodeFromUser[];
+}
+
+interface FavoriteEpisodeAccordionsProps {
+  season: SeasonFromUser;
+  podcastShowId: PodcastShow["id"];
+}
+
+const FavoriteEpisodeAccordions: React.FC<FavoriteEpisodeAccordionsProps> = ({
+  season,
+  podcastShowId,
+}) => {
   const { currentEpisode, isPlaying, playEpisode, pauseEpisode } =
     usePlayerStore();
-  const { userData, removeFavoriteEpisode } = useUserStore();
+  const { removeFavoriteEpisode } = useUserStore();
   // <=========== Media Control Logic ===========>
   const handlePlay = (episode: Episode) => {
     if (isPlaying) {
@@ -28,8 +46,8 @@ const FavoriteEpisodeAccordions = ({ season, podcastShowId }) => {
 
   // <=========== Remove from favorites ===========>
 
-  const handleRemoveFavorite = (episodeItem) => {
-    removeFavoriteEpisode(podcastShow, season?.title, episodeItem?.title);
+  const handleRemoveFavorite = (episodeItem: Episode) => {
+    removeFavoriteEpisode(podcastShow!, season?.title, episodeItem?.title);
   };
 
   // <=========== Fetch the podcast ===========>
@@ -42,40 +60,45 @@ const FavoriteEpisodeAccordions = ({ season, podcastShowId }) => {
         setPodcastShow(data);
 
         // <=========== Get favEps as podcastShow object ===========>
-        // <== Matching Season from the specific show ==>
+        // <== Matching Season from the specific show data ==>
         const matchingSeason = data?.seasons?.find(
-          (podcastShowSeason) => podcastShowSeason.title === season.title
+          (podcastShowSeason: Season) =>
+            podcastShowSeason.title === season.title
         );
 
         // <== Extract names from favorites array ==>
-        const secondDataTitles = season.episodes.map(
+        const userDataEpTitles = season.episodes.map(
           (episode) => episode.title
         );
 
-        // <== Function to filter episodes and include the date from the second data structure ==>
-        const filterEpisodesWithTitleAndDate = (
+        // <== Function to filter episodes and include the date from the userData ==>
+        interface filterEpisodesWithTitleAndDateProps {
+          episodes: Episode[];
+          titles: string[];
+          usersFavEps: EpisodeFromUser[];
+        }
+        const filterEpisodesWithTitleAndDate = ({
           episodes,
           titles,
-          secondData
-        ) => {
+          usersFavEps,
+        }: filterEpisodesWithTitleAndDateProps) => {
           return episodes
             .filter((episode) => titles.includes(episode.title))
-            .map((episode) => {
-              const correspondingItem = secondData.find(
-                (item) => item.title === episode.title
-              );
-              return {
-                ...episode,
-                date: correspondingItem ? correspondingItem.date : null,
-              };
-            });
+            .map((episode) => ({
+              ...(episode as Episode), // Inline type assertion for the original episode
+              date:
+                usersFavEps.find((item) => item.title === episode.title)
+                  ?.date || null,
+            }));
         };
 
         // <== Extract episodes from the show data with title and date ==>
         const matchingEpisodesWithTitleAndDate = filterEpisodesWithTitleAndDate(
-          matchingSeason.episodes,
-          secondDataTitles,
-          season.episodes
+          {
+            episodes: matchingSeason!.episodes,
+            titles: userDataEpTitles,
+            usersFavEps: season.episodes,
+          }
         );
 
         setEpisodesToRender(matchingEpisodesWithTitleAndDate);
@@ -133,8 +156,3 @@ const FavoriteEpisodeAccordions = ({ season, podcastShowId }) => {
 };
 
 export default FavoriteEpisodeAccordions;
-
-// <== get the matching fave episode item ==>
-// const correspondingItems = matchingEpisodes.map((episodeItem) =>
-// getCorrespondingItem(episodeItem, season.episodes)
-// );
